@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -54,6 +54,7 @@ class UsersController extends Controller
 
     // Login
     function login(Request $request) {
+
         if ($request->isJson()) {
             try {
                 $data = $request->json()->all();
