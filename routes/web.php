@@ -15,13 +15,17 @@
 */
 
 
-
-
 $router->post('register', ['uses' => 'UsersController@createUser']);    
-$router->post('login', ['uses' => 'UsersController@getToken']);
+$router->post('login', ['uses' => 'UsersController@login']);
 
 $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('users', ['uses' => 'UsersController@showUsers']);
+
+    $router->post('users/password', ['uses' => 'UsersController@updatePassword']);
+    $router->post('users/country', ['uses' => 'UsersController@updateCountry']);
+    $router->post('users/speciality', ['uses' => 'UsersController@updateSpeciality']);
+
+    $router->post('users/logout', ['uses' => 'UsersController@logout']);
 });
 
 

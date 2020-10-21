@@ -21,11 +21,11 @@ class UsersController extends Controller
         }
     }
 
+    // Register
     function createUser(Request $request) {
 
         if ($request->isJson()) {
             $data = $request->json()->all();
-
 
             if (User::where('email', $data['email'])->doesntExist()) {
                 // Si el usuario existe
@@ -52,17 +52,23 @@ class UsersController extends Controller
         }
     }
 
-
-    function getToken(Request $request) {
+    // Login
+    function login(Request $request) {
         if ($request->isJson()) {
             try {
                 $data = $request->json()->all();
                 $user = User::where('email', $data['email'])->first();
 
                 if ($user && Hash::check($data['password'], $user->password)) {
+                    
+                    if ($user->api_token == NULL) {
+                        $user->api_token = Str::random(60);
+                        $user->save();
+                    }
+                
                     return response()->json($user, 200);
                 } else {
-                    return response()->json(['error' => 'Incorrect password'], 406);
+                    return response()->json(['error' => 'Incorrect password'], 400);
                 }
             } catch (ModelNotFoundException $e) {
                 return response()->json(['error' => 'Unauthorized' ], 401);
@@ -71,4 +77,77 @@ class UsersController extends Controller
             return response()->json(['error' => 'Unauthorized' ], 401);
         }
     }
+
+    // Logout
+    function logout(Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->json()->all();
+
+            $user = User::where('email', $data['email'])->first();
+
+            if($user) {
+                $user->api_token = null;
+                $user->save();
+            }
+            return response()->json([$user], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized' ], 401);
+        }
+    }
+
+    // Update password
+    function updatePassword(Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->json()->all();
+
+            $user = User::where('email', $data['email'])->first();
+
+            if($user) {
+                $user->password = Hash::make($data['password']);
+                $user->save();
+            }
+            return response()->json([$user], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized' ], 401);
+        }
+    }
+
+    // Update country
+    function updateCountry(Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->json()->all();
+
+            $user = User::where('email', $data['email'])->first();
+
+            if($user) {
+                $user->country = $data['country'];
+                $user->save();
+            }
+            return response()->json([$user], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized' ], 401);
+        }
+    }
+
+    // Update speciality
+    function updateSpeciality(Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->json()->all();
+
+            $user = User::where('email', $data['email'])->first();
+
+            if($user) {
+                $user->speciality = $data['speciality'];
+                $user->save();
+            }
+            return response()->json([$user], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized' ], 401);
+        }
+    }
+
 }
