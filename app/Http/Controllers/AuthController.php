@@ -39,8 +39,8 @@ class AuthController extends Controller
                 // Si el usuario existe
                 try{
                     $user = User::create([
-                        'name'=> $data['name'],
                         'uid'=> Str::random(32),
+                        'name'=> $data['name'],
                         'surnames'=> $data['surnames'],
                         'email'=> $data['email'],
                         'password'=> Hash::make($data['password']),
@@ -48,7 +48,7 @@ class AuthController extends Controller
                         'country'=> $data['country'],
                     ]);
 
-                    return response()->json(['message' =>'User succesfully created'], 201);
+                    return response()->json(['message' =>'Usuario creado correctamente.'], 201);
                 } catch (Exception $e) {
                     return response()->json(['error' => 'Ha ocurrido un problema en el registro' ], 500);
                 }
@@ -56,7 +56,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email' ], 400);
             }        
         } else {
-            return response()->json(['error' => 'Unauthorized' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }
     }
 
@@ -70,20 +70,21 @@ class AuthController extends Controller
 
         if ($request->isJson()) {
             try {
-                $data = $request->json()->all();
-                $user = User::where('email', $data['email'])->first();
 
-                $credentials = request(['email', 'password']);
+                $credentials = $request->json()->all(); //request(['email', 'password']);
+
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos.'], 400);
                 }
+
                 return $this->respondWithToken($token);
 
             } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Unauthorized' ], 401);
+                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
             }
+            
         } else {
-            return response()->json(['error' => 'Unauthorized' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }
 
     }
@@ -96,7 +97,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Se ha cerrado la sesión correctamente.']);
     }
 
 
