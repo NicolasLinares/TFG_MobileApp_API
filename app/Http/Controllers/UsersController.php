@@ -91,7 +91,7 @@ class UsersController extends Controller
                 $user->api_token = null;
                 $user->save();
             }
-            return response()->json([$user], 200);
+            return response()->json([], 200);
         } else {
             return response()->json(['error' => 'Unauthorized' ], 401);
         }

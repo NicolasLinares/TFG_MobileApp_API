@@ -21,11 +21,11 @@ $router->post('login', ['uses' => 'UsersController@login']);
 $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('users', ['uses' => 'UsersController@showUsers']);
 
-    $router->post('users/password', ['uses' => 'UsersController@updatePassword']);
-    $router->post('users/country', ['uses' => 'UsersController@updateCountry']);
-    $router->post('users/speciality', ['uses' => 'UsersController@updateSpeciality']);
+    $router->put('users/password', ['uses' => 'UsersController@updatePassword']);
+    $router->put('users/country', ['uses' => 'UsersController@updateCountry']);
+    $router->put('users/speciality', ['uses' => 'UsersController@updateSpeciality']);
 
-    $router->post('users/logout', ['uses' => 'UsersController@logout']);
+    $router->put('users/logout', ['uses' => 'UsersController@logout']);
 });
 
 
