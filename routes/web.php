@@ -29,16 +29,6 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 });
 
 
-
-
-$router->get('/', function () use ($router) {
-    $results = app('db')->select("SELECT * FROM user");
-    echo '<pre>';
-    print_r ($results);
-    echo '</pre>';
-    return $router->app->version();
-});
-
 /*
 $router->group(['prefix' => 'api'], function () use ($router) {
 
