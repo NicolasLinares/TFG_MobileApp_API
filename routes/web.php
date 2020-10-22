@@ -14,19 +14,21 @@
 |
 */
 
+$router->post('/login', 'AuthController@login');
+$router->post('/register', 'AuthController@register');
 
-$router->post('register', ['uses' => 'UsersController@createUser']);    
-$router->post('login', ['uses' => 'UsersController@login']);
+$router->group(['middleware' => 'auth:api'], function($router)
+{
+    $router->post('/logout', ['uses' => 'AuthController@logout']);
 
-$router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('users', ['uses' => 'UsersController@showUsers']);
 
-    $router->put('users/password', ['uses' => 'UsersController@updatePassword']);
-    $router->put('users/country', ['uses' => 'UsersController@updateCountry']);
-    $router->put('users/speciality', ['uses' => 'UsersController@updateSpeciality']);
+    $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
+    $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
+    $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
 
-    $router->put('users/logout', ['uses' => 'UsersController@logout']);
 });
+
 
 
 /*
