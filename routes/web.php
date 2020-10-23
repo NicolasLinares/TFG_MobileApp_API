@@ -14,10 +14,11 @@
 |
 */
 
+
 $router->post('/login', 'AuthController@login');
 $router->post('/register', 'AuthController@register');
 
-$router->group(['middleware' => 'auth:api'], function($router)
+$router->group(['middleware' => ['json','auth:api']], function($router)
 {
     $router->post('/logout', ['uses' => 'AuthController@logout']);
 
