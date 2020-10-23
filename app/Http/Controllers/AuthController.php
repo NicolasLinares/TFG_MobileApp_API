@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -33,7 +34,22 @@ class AuthController extends Controller
     {
 
         if ($request->isJson()) {
-            $data = $request->json()->all();
+
+            $data = $request->only('name', 'surnames', 'email', 'password', 'speciality', 'country');
+
+            // Se comprueba que los campos cumplen el formato
+            $validator = Validator::make($data, [
+                'name'=> 'required',
+                'surnames'=> 'required',
+                'email' => 'required|email|max:255',
+                'password' => 'required',
+                'speciality'=> 'required',
+                'country'=> 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => 'Los datos introducidos no son correctos.'], 422);
+            }
 
             if (User::where('email', $data['email'])->doesntExist()) {
                 // Si el usuario existe
@@ -67,26 +83,34 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-
         if ($request->isJson()) {
             try {
 
-                $credentials = $request->json()->all(); //request(['email', 'password']);
+                $credentials = $request->only('email', 'password');
+
+                // Se comprueba que los campos cumplen el formato
+                $validator = Validator::make($credentials, [
+                    'email' => 'required|email|max:255',
+                    'password' => 'required'
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['error' => 'Los datos introducidos no son correctos.'], 422);
+                }
 
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos.'], 400);
                 }
-
+                
+                // Éxito - Login correcto
                 return $this->respondWithToken($token);
 
             } catch (ModelNotFoundException $e) {
                 return response()->json(['error' => 'Usuario no autorizado.' ], 401);
             }
-            
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'El formato no es válido.' ], 400);
         }
-
     }
 
     /**
@@ -138,7 +162,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL(),  // Se define en .env
             'user' => auth()->user(),
-        ]);
+        ], 200);
     }
 
 

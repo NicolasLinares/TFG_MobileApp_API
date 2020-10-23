@@ -14,22 +14,25 @@
 |
 */
 
-
-$router->post('/login', 'AuthController@login');
-$router->post('/register', 'AuthController@register');
-
-$router->group(['middleware' => ['json','auth:api']], function($router)
+$router->group(['prefix' => 'v1'], function($router)
 {
-    $router->post('/logout', ['uses' => 'AuthController@logout']);
+    $router->post('/auth/login', 'AuthController@login');
+    $router->post('/auth/register', 'AuthController@register');
 
-    $router->get('users', ['uses' => 'UsersController@showUsers']);
+    // Todas las peticiones que se producen dentro de la app pasan a través
+    // de un middleware de autenticación JWT
+    $router->group(['middleware' => 'auth:api'], function($router)
+    {
+        $router->post('/auth/logout', ['uses' => 'AuthController@logout']);
 
-    $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
-    $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
-    $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
+        $router->get('users', ['uses' => 'UsersController@showUsers']);
 
+        $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
+        $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
+        $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
+
+    });
 });
-
 
 
 /*

@@ -72,13 +72,11 @@ $app->configure('app');
 */
 
 /*  Se aplica el middleware a todas las rutas específicas, por cada petición HTTP  */
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+//$app->middleware([
+//]);
 
 /*  Se aplica el middleware a rutas específicas  */
 $app->routeMiddleware([
-    'json' => App\Http\Middleware\JsonMiddleware::class,
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
