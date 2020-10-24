@@ -24,7 +24,7 @@ class AuthController extends Controller
         $this->jwt = $jwt;
     }
 
-        /**
+    /**
      * Store a new user.
      *
      * @param  Request  $request
@@ -54,8 +54,15 @@ class AuthController extends Controller
             if (User::where('email', $data['email'])->doesntExist()) {
                 // Si el usuario existe
                 try{
+
+                    $uid = Str::random(32);
+                    // evitamos que se cree un número random igual, debe ser un único
+                    while(User::where('uid',$uid)->exists()) {
+                        $uid = Str::random(32);
+                    }
+
                     $user = User::create([
-                        'uid'=> Str::random(32),
+                        'uid'=> $uid,
                         'name'=> $data['name'],
                         'surnames'=> $data['surnames'],
                         'email'=> $data['email'],

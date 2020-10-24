@@ -26,10 +26,18 @@ $router->group(['prefix' => 'v1'], function($router)
         $router->post('/auth/logout', ['uses' => 'AuthController@logout']);
 
         $router->get('users', ['uses' => 'UsersController@showUsers']);
-
         $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
         $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
         $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
+
+
+        $router->get('audios', ['uses' => 'AudiosController@getAudios']);
+        $router->get('tags', ['uses' => 'AudiosController@getTags']);
+        $router->get('audio/{id}', ['uses' => 'AudiosController@getAudio']);
+        $router->post('audio', ['uses' => 'AudiosController@addAudio']);
+        $router->put('audio/{id}/name', ['uses' => 'AudiosController@getAudio']);
+        $router->put('audio/{id}/name', ['uses' => 'AudiosController@getAudio']);
+
 
     });
 });
