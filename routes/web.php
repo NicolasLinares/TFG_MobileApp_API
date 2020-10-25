@@ -37,16 +37,14 @@ $router->group(['prefix' => 'v1'], function($router)
 
         // AUDIO OPS
         $router->get('audios', ['uses' => 'AudiosController@getAll']);
+        $router->delete('audios', ['uses' => 'AudiosController@deleteAll']);
         $router->get('tags', ['uses' => 'AudiosController@getTags']);
 
-        $router->post('audio', ['uses' => 'AudiosController@addAudio']);
-        $router->get('audio/{id}', ['uses' => 'AudiosController@getAudio']);
-        $router->delete('audio/{id}', ['uses' => 'AudiosController@deleteAudio']);
-
-        $router->put('audio/{id}/name', ['uses' => 'AudiosController@updateName']);
-        $router->put('audio/{id}/tag', ['uses' => 'AudiosController@updateTag']);
-        $router->put('audio/{id}/description', ['uses' => 'AudiosController@updateDescription']);
-        $router->put('audio/{id}/transcription', ['uses' => 'AudiosController@updateTrascription']);
+        $router->post('audio', ['uses' => 'AudiosController@add']);
+        $router->get('audio/{id}', ['uses' => 'AudiosController@get']);
+        $router->delete('audio/{id}', ['uses' => 'AudiosController@delete']);
+        $router->post('audio/{id}', ['uses' => 'AudiosController@saveAudioFile']);
+        $router->put('audio/{id}', ['uses' => 'AudiosController@update']);
 
     });
 });

@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Audio;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use \Illuminate\Database\QueryException;
 
 use Exception;
 
@@ -22,6 +21,18 @@ class AudiosController extends Controller
             $doctor = Auth::id();
             $data = Audio::select('name','url', 'tag', 'doctor')->where('doctor', $doctor)->get();
             return response()->json([$data], 200);
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
+    }
+
+    function deleteAll(Request $request) {
+
+        if ($request->isJson()) {
+            $doctor = Auth::id();
+            // Se borran todos los audios asociados al médico
+            Audio::where('doctor', $doctor)->delete();
+            return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }
@@ -44,9 +55,8 @@ class AudiosController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function addAudio(Request $request)
+    public function add(Request $request)
     {
-
         if ($request->isJson()) {
 
             $data = $request->only('name', 'extension', 'url', 'tag', 'description');
@@ -63,11 +73,10 @@ class AudiosController extends Controller
                 return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
             }
 
-
             $doctor = Auth::id();
             $uid = Str::random(32);
             // Evitamos que se cree un número random igual, debe ser un único
-            while(Audio::where('uid',$uid)->exists()) {
+            if(Audio::where('uid',$uid)->exists()) {
                 $uid = Str::random(32);
             }
 
@@ -88,8 +97,15 @@ class AudiosController extends Controller
         }
     }
 
+    public function saveAudioFile(Request $request)
+    {
 
-    function getAudio($id, Request $request) {
+        $file = $request->file('file');
+
+        return response(dd($file), 200);
+    }
+
+    function get($id, Request $request) {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
@@ -104,23 +120,67 @@ class AudiosController extends Controller
         }
     }
 
-    function deleteAudio($id, Request $request) {
+    function delete($id, Request $request) {
 
         if ($request->isJson()) {
-            $doctor = 4;
+            // Se comprueba que el usuario que borra sea el dueño del audio
+            $doctor = Auth::id();
+            $user = Audio::select('doctor')->where('id', $id)->first();
 
-            try {
-                Audio::where([
-                    ['id', '=', $id],
-                    ['doctor', '=', $doctor]
-                ])->delete();
-                return response()->json(['message' => 'Audio borrado correctamente.'], 200);
-
-            } catch(Exception $ex) {
-                return response()->json($ex->getMessage(), 400);
+            if($user['doctor'] != $doctor) {
+                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
             }
+            // Se borra el audio
+            Audio::where('id', $id)->delete();
+
+            return response()->json(['message' => 'Audio borrado correctamente.'], 200);
+        
         } else {
             return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }
     }
+
+    function update($id, Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->only('name', 'tag', 'description', 'transcription');
+
+            // Se comprueba que los campos cumplen el formato
+            $validator = Validator::make($data, [
+                'name'=> 'required',
+                'tag'=> 'required',
+                'description'=> 'required',
+                'transcription'=> 'required',
+            ]);
+            
+            $doctor = Auth::id();
+            $audio = Audio::where([
+                ['id', '=', $id],
+                ['doctor', '=', $doctor]
+            ])->first();
+
+            if($audio) {
+                if ($data['name'] != "") {
+                    $audio->name = $data['name'];
+                }
+                if ($data['tag'] != "") {
+                    $audio->tag = $data['tag'];
+                }
+                if ($data['description'] != "") {
+                    $audio->description = $data['description'];
+                }
+                if ($data['transcription'] != "") {
+                    $audio->transcription = $data['transcription'];
+                }
+                $audio->save();
+                return response()->json($audio, 201);
+            } else {
+                return response()->json(['error' => 'Audio no encontrado.' ], 404);
+            }
+
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
+    }
+
 }
