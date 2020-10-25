@@ -17,7 +17,7 @@
 $router->group(['prefix' => 'v1'], function($router)
 {
     // LOGIN
-    $router->post('/auth/login', 'AuthController@login');
+    $router->get('/auth/login', 'AuthController@login');
     // SIGNUP
     $router->post('/auth/register', 'AuthController@register');
 
