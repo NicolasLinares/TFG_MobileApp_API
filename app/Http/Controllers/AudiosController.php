@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use \Illuminate\Database\QueryException;
 
 use Exception;
 
@@ -15,7 +16,7 @@ use Exception;
 
 class AudiosController extends Controller
 {
-    function getAudios(Request $request) {
+    function getAll(Request $request) {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
@@ -37,23 +38,8 @@ class AudiosController extends Controller
         }
     }
 
-    function getAudio($id, Request $request) {
-
-        if ($request->isJson()) {
-            $doctor = Auth::id();
-            $data = Audio::select('*')->where('id', $id)->first();
-
-            if($data['doctor'] != $doctor) {
-                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
-            }
-            return response()->json($data, 200);
-        } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
-        }
-    }
-
     /**
-     * Store a new user.
+     * Store a new audio.
      *
      * @param  Request  $request
      * @return Response
@@ -97,6 +83,42 @@ class AudiosController extends Controller
 
             return response()->json([$audio], 201);
 
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
+    }
+
+
+    function getAudio($id, Request $request) {
+
+        if ($request->isJson()) {
+            $doctor = Auth::id();
+            $data = Audio::where('id', $id)->first();
+
+            if($data['doctor'] != $doctor) {
+                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            }
+            return response()->json($data, 200);
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
+    }
+
+    function deleteAudio($id, Request $request) {
+
+        if ($request->isJson()) {
+            $doctor = 4;
+
+            try {
+                Audio::where([
+                    ['id', '=', $id],
+                    ['doctor', '=', $doctor]
+                ])->delete();
+                return response()->json(['message' => 'Audio borrado correctamente.'], 200);
+
+            } catch(Exception $ex) {
+                return response()->json($ex->getMessage(), 400);
+            }
         } else {
             return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }

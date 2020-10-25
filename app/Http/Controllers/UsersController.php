@@ -12,7 +12,7 @@ use Exception;
 
 class UsersController extends Controller
 {
-    function showUsers(Request $request) {
+    function getAll(Request $request) {
 
         if ($request->isJson()) {
             return response()->json([User::all()], 200);

@@ -16,36 +16,37 @@
 
 $router->group(['prefix' => 'v1'], function($router)
 {
+    // LOGIN
     $router->post('/auth/login', 'AuthController@login');
+    // SIGNUP
     $router->post('/auth/register', 'AuthController@register');
 
     // Todas las peticiones que se producen dentro de la app pasan a través
     // de un middleware de autenticación JWT
     $router->group(['middleware' => 'auth:api'], function($router)
-    {
+    {   
+        // LOGOUT
         $router->post('/auth/logout', ['uses' => 'AuthController@logout']);
 
-        $router->get('users', ['uses' => 'UsersController@showUsers']);
+        // USER OPS
+        $router->get('users', ['uses' => 'UsersController@getAll']);
+
         $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
         $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
         $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
 
-
-        $router->get('audios', ['uses' => 'AudiosController@getAudios']);
+        // AUDIO OPS
+        $router->get('audios', ['uses' => 'AudiosController@getAll']);
         $router->get('tags', ['uses' => 'AudiosController@getTags']);
-        $router->get('audio/{id}', ['uses' => 'AudiosController@getAudio']);
-        $router->post('audio', ['uses' => 'AudiosController@addAudio']);
-        $router->put('audio/{id}/name', ['uses' => 'AudiosController@getAudio']);
-        $router->put('audio/{id}/name', ['uses' => 'AudiosController@getAudio']);
 
+        $router->post('audio', ['uses' => 'AudiosController@addAudio']);
+        $router->get('audio/{id}', ['uses' => 'AudiosController@getAudio']);
+        $router->delete('audio/{id}', ['uses' => 'AudiosController@deleteAudio']);
+
+        $router->put('audio/{id}/name', ['uses' => 'AudiosController@updateName']);
+        $router->put('audio/{id}/tag', ['uses' => 'AudiosController@updateTag']);
+        $router->put('audio/{id}/description', ['uses' => 'AudiosController@updateDescription']);
+        $router->put('audio/{id}/transcription', ['uses' => 'AudiosController@updateTrascription']);
 
     });
 });
-
-
-/*
-$router->group(['prefix' => 'api'], function () use ($router) {
-
-
-});
-*/
