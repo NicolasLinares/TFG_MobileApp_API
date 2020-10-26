@@ -35,12 +35,12 @@ class AuthController extends Controller
 
         if ($request->isJson()) {
 
-            $data = $request->only('name', 'surnames', 'email', 'password', 'speciality', 'country');
+            $data = $request->only('name', 'surname', 'email', 'password', 'speciality', 'country');
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
                 'name'=> 'required',
-                'surnames'=> 'required',
+                'surname'=> 'required',
                 'email' => 'required|email|max:255',
                 'password' => 'required',
                 'speciality'=> 'required',
@@ -64,7 +64,7 @@ class AuthController extends Controller
                     $user = User::create([
                         'uid'=> $uid,
                         'name'=> $data['name'],
-                        'surnames'=> $data['surnames'],
+                        'surname'=> $data['surname'],
                         'email'=> $data['email'],
                         'password'=> Hash::make($data['password']),
                         'speciality'=> $data['speciality'],
