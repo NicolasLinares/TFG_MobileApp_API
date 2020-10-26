@@ -128,7 +128,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response()->json(['message' => 'Se ha cerrado la sesión correctamente.']);
+        return response()->json(['message' => 'Se ha cerrado la sesión correctamente.'], 200);
     }
 
 
