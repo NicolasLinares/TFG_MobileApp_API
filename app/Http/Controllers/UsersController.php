@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 use Exception;
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
@@ -26,17 +30,35 @@ class UsersController extends Controller
     function updatePassword(Request $request) {
         if ($request->isJson()) {
 
-            $data = $request->json()->all();
+            $data = $request->only('old', 'new');
 
-            $user = User::where('email', $data['email'])->first();
+            // Se comprueba que los campos cumplen el formato
+            $validator = Validator::make($data, [
+                'old' => 'required',
+                'new' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
+            }
+
+            $doctor = Auth::id();
+            $user = User::where('id', $doctor)->first();
 
             if($user) {
-                $user->password = Hash::make($data['password']);
-                $user->save();
+                if (Hash::check($data['old'], $user->password)) {
+                    $user->password = Hash::make($data['new']);
+                    $user->save();
+                    return response()->json(['message' => 'La contraseña se ha cambiado correctamente'], 200);
+                } else {
+                    return response()->json(['error' => 'La contraseña actual no es correcta' ], 400);
+                }
+            } else {
+                return response()->json(['error' => 'Usuario no autorizado' ], 401);
             }
-            return response()->json([$user], 200);
+            
         } else {
-            return response()->json(['error' => 'Unauthorized' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado' ], 401);
         }
     }
 
