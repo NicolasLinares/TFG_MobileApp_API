@@ -58,7 +58,7 @@ class UsersController extends Controller
             }
             
         } else {
-            return response()->json(['error' => 'Usuario no autorizado' ], 401);
+            return response()->json(['error' => 'El formato no es válido' ], 400);
         }
     }
 

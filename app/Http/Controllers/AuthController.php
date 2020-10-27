@@ -48,7 +48,7 @@ class AuthController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['error' => 'Los datos introducidos no son correctos.'], 422);
+                return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
             }
 
             if (User::where('email', $data['email'])->doesntExist()) {
@@ -71,7 +71,7 @@ class AuthController extends Controller
                         'country'=> $data['country'],
                     ]);
 
-                    return response()->json(['message' =>'Usuario creado correctamente.'], 201);
+                    return response()->json(['message' =>'Usuario creado correctamente'], 201);
                 } catch (Exception $e) {
                     return response()->json(['error' => 'Ha ocurrido un problema en el registro' ], 500);
                 }
@@ -79,7 +79,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email' ], 400);
             }        
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'El formato no es válido' ], 400);
         }
     }
 
@@ -102,21 +102,21 @@ class AuthController extends Controller
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->json(['error' => 'Los datos introducidos no son correctos.'], 422);
+                    return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
 
                 if (!$token = auth()->attempt($credentials)) {
-                    return response()->json(['error' => 'Email o contraseña incorrectos.'], 400);
+                    return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
                 }
                 
                 // Éxito - Login correcto
                 return $this->respondWithToken($token);
 
             } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+                return response()->json(['error' => 'Usuario no autorizado' ], 401);
             }
         } else {
-            return response()->json(['error' => 'El formato no es válido.' ], 400);
+            return response()->json(['error' => 'El formato no es válido' ], 400);
         }
     }
 
@@ -128,7 +128,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response()->json(['message' => 'Se ha cerrado la sesión correctamente.'], 200);
+        return response()->json(['message' => 'Se ha cerrado la sesión correctamente'], 200);
     }
 
 
