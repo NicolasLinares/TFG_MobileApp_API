@@ -86,11 +86,15 @@ class AudiosController extends Controller
                 'name'=> $data['name'],
                 'extension'=> $data['extension'], 
                 'localpath' => $data['localpath'],               
+                'url' => null,             
                 'tag'=> $data['tag'],
                 'description'=> $data['description'] != "" ? $data['description'] : null,
                 'doctor' => $doctor
             ]);
 
+
+
+            
             return response()->json($audio, 201);
 
         } else {
