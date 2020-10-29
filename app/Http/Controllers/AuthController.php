@@ -112,7 +112,7 @@ class AuthController extends Controller
                 // Éxito - Login correcto
                 return $this->respondWithToken($token);
 
-            } catch (ModelNotFoundException $e) {
+            } catch (Exception $e) {
                 return response()->json(['error' => 'Usuario no autorizado' ], 401);
             }
         } else {

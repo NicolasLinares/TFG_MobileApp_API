@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 use Exception;
+use phpDocumentor\Reflection\Types\Null_;
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
 
@@ -59,14 +60,14 @@ class AudiosController extends Controller
     {
         if ($request->isJson()) {
 
-            $data = $request->only('name', 'extension', 'url', 'tag', 'description');
+            $data = $request->only('name', 'extension', 'localpath', 'tag', 'description');
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
                 'name'=> 'required',
                 'extension' => 'required',
                 'tag' => 'required',
-                'description' => 'required',
+                'localpath' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -75,7 +76,7 @@ class AudiosController extends Controller
 
             $doctor = Auth::id();
             $uid = Str::random(32);
-            // Evitamos que se cree un número random igual, debe ser un único
+            // Evitamos que se cree un número random igual, debe ser único
             if(Audio::where('uid',$uid)->exists()) {
                 $uid = Str::random(32);
             }
@@ -83,14 +84,14 @@ class AudiosController extends Controller
             $audio = Audio::create([
                 'uid'=> $uid,
                 'name'=> $data['name'],
-                'extension'=> $data['extension'],
-                'url'=> $data['url'],
+                'extension'=> $data['extension'], 
+                'localpath' => $data['localpath'],               
                 'tag'=> $data['tag'],
-                'description'=> $data['description'],
+                'description'=> $data['description'] != "" ? $data['description'] : null,
                 'doctor' => $doctor
             ]);
 
-            return response()->json([$audio], 201);
+            return response()->json($audio, 201);
 
         } else {
             return response()->json(['error' => 'Usuario no autorizado.' ], 401);
@@ -105,11 +106,11 @@ class AudiosController extends Controller
         return response(dd($file), 200);
     }
 
-    function get($id, Request $request) {
+    function get($uid, Request $request) {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
-            $data = Audio::where('id', $id)->first();
+            $data = Audio::where('uid', $uid)->first();
 
             if($data['doctor'] != $doctor) {
                 return response()->json(['error' => 'Usuario no autorizado.' ], 401);
@@ -120,18 +121,18 @@ class AudiosController extends Controller
         }
     }
 
-    function delete($id, Request $request) {
+    function delete($uid, Request $request) {
 
         if ($request->isJson()) {
             // Se comprueba que el usuario que borra sea el dueño del audio
             $doctor = Auth::id();
-            $user = Audio::select('doctor')->where('id', $id)->first();
+            $user = Audio::select('doctor')->where('uid', $uid)->first();
 
             if($user['doctor'] != $doctor) {
                 return response()->json(['error' => 'Usuario no autorizado.' ], 401);
             }
             // Se borra el audio
-            Audio::where('id', $id)->delete();
+            Audio::where('uid', $uid)->delete();
 
             return response()->json(['message' => 'Audio borrado correctamente.'], 200);
         
@@ -140,7 +141,7 @@ class AudiosController extends Controller
         }
     }
 
-    function update($id, Request $request) {
+    function update($uid, Request $request) {
         if ($request->isJson()) {
 
             $data = $request->only('name', 'tag', 'description', 'transcription');
@@ -155,7 +156,7 @@ class AudiosController extends Controller
             
             $doctor = Auth::id();
             $audio = Audio::where([
-                ['id', '=', $id],
+                ['uid', '=', $uid],
                 ['doctor', '=', $doctor]
             ])->first();
 
