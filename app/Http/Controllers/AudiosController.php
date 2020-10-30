@@ -87,8 +87,9 @@ class AudiosController extends Controller
                 'extension'=> $data['extension'], 
                 'localpath' => $data['localpath'],               
                 'url' => null,             
-                'tag'=> $data['tag'],
-                'description'=> $data['description'] != "" ? $data['description'] : null,
+                'tag' => $data['tag'],
+                'description' => $data['description'] != "" ? $data['description'] : null,
+                'transcription' => null,
                 'doctor' => $doctor
             ]);
 
