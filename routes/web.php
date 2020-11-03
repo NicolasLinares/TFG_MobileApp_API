@@ -39,12 +39,15 @@ $router->group(['prefix' => 'v1'], function($router)
         $router->get('audios', ['uses' => 'AudiosController@getAll']);
         $router->delete('audios', ['uses' => 'AudiosController@deleteAll']);
         $router->get('tags', ['uses' => 'AudiosController@getTags']);
+        $router->get('audios/{tag}', ['uses' => 'AudiosController@getAllTag']);
+
 
         $router->post('audio', ['uses' => 'AudiosController@add']);
         $router->get('audio/{uid}', ['uses' => 'AudiosController@get']);
         $router->delete('audio/{uid}', ['uses' => 'AudiosController@delete']);
         $router->post('audio/{uid}', ['uses' => 'AudiosController@saveAudioFile']);
-        $router->put('audio/{uid}', ['uses' => 'AudiosController@update']);
+        
+        $router->put('audio/description/{uid}', ['uses' => 'AudiosController@updateDescription']);
 
     });
 });
