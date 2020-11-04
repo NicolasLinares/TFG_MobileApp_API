@@ -201,15 +201,6 @@ class AudiosController extends Controller
         if ($request->isJson()) {
 
             $data = $request->only('description');
-            
-            // Se comprueba que los campos cumplen el formato
-            $validator = Validator::make($data, [
-                'description'=> 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
-            }
 
             $doctor = Auth::id();
             $audio = Audio::where([
@@ -219,7 +210,7 @@ class AudiosController extends Controller
 
             if($audio) {
 
-                $audio->description = $data['description'];
+                $audio->description = $data['description'] === "" ? null : $data['description'];
                 $audio->save();
 
                 return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
