@@ -239,7 +239,7 @@ class AudiosController extends Controller
                 if ($data['name'] !== "") {
                     $audio->name = $data['name'];
                     $audio->save();
-                    return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
+                    return response()->json(['message' => 'El nombre se ha actualizado correctamente'], 201);
                 } else {
                     return response()->json(['error' => 'El nombre introducido no es válido'], 400);
                 }
