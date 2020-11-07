@@ -185,15 +185,15 @@ class AudiosController extends Controller
             $user = Audio::select('doctor')->where('uid', $uid)->first();
 
             if($user['doctor'] != $doctor) {
-                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+                return response()->json(['error' => 'Usuario no autorizado' ], 401);
             }
             // Se borra el audio
             Audio::where('uid', $uid)->delete();
 
-            return response()->json(['message' => 'Audio borrado correctamente.'], 200);
+            return response()->json(['message' => 'Audio borrado correctamente'], 200);
         
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado' ], 401);
         }
     }
 
@@ -214,6 +214,36 @@ class AudiosController extends Controller
                 $audio->save();
 
                 return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
+            } else {
+                return response()->json(['error' => 'Audio no encontrado.' ], 404);
+            }
+
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
+    }
+
+    function updateName($uid, Request $request) {
+        if ($request->isJson()) {
+
+            $data = $request->only('name');
+
+            $doctor = Auth::id();
+            $audio = Audio::where([
+                ['uid', '=', $uid],
+                ['doctor', '=', $doctor]
+            ])->first();
+
+            if($audio) {
+
+                if ($data['name'] !== "") {
+                    $audio->name = $data['name'];
+                    $audio->save();
+                    return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
+                } else {
+                    return response()->json(['error' => 'El nombre introducido no es válido'], 400);
+                }
+
             } else {
                 return response()->json(['error' => 'Audio no encontrado.' ], 404);
             }

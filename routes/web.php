@@ -48,6 +48,7 @@ $router->group(['prefix' => 'v1'], function($router)
         $router->post('audio/{uid}', ['uses' => 'AudiosController@saveAudioFile']);
         
         $router->put('audio/description/{uid}', ['uses' => 'AudiosController@updateDescription']);
+        $router->put('audio/name/{uid}', ['uses' => 'AudiosController@updateName']);
 
     });
 });
