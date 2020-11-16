@@ -30,7 +30,7 @@ class AuthController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function register(Request $request)
+    public function signin(Request $request)
     {
 
         if ($request->isJson()) {

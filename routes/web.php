@@ -19,14 +19,14 @@ $router->group(['prefix' => 'v1'], function($router)
     // LOGIN
     $router->post('/auth/login', 'AuthController@login');
     // SIGNUP
-    $router->post('/auth/register', 'AuthController@register');
+    $router->post('/auth/signin', 'AuthController@signin');
 
     // Todas las peticiones que se producen dentro de la app pasan a través
     // de un middleware de autenticación JWT
     $router->group(['middleware' => 'auth:api'], function($router)
     {   
         // LOGOUT
-        $router->post('/auth/logout', ['uses' => 'AuthController@logout']);
+        $router->delete('/auth/logout', ['uses' => 'AuthController@logout']);
 
         // USER OPS
         $router->get('users', ['uses' => 'UsersController@getAll']);
