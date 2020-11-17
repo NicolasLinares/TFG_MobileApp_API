@@ -116,7 +116,7 @@ class AudiosController extends Controller
             $file = $body['file'];
             $data = $body['data'];
 
-            Storage::disk('local')->put($data['name'], $file);
+            Storage::disk('local')->put('file.txt', 'Contents');
 
             return response()->json($data, 202);
  
