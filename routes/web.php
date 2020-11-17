@@ -14,6 +14,15 @@
 |
 */
 
+use Illuminate\Support\Facades\Storage;
+
+$router->get('storage/{filename}', function ($filename)
+    {
+        return Storage::download($filename);
+    }
+);
+
+
 $router->group(['prefix' => 'v1'], function($router)
 {
     // LOGIN
