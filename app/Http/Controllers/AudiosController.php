@@ -111,7 +111,7 @@ class AudiosController extends Controller
     public function add(Request $request)
     {
 
-            $body = $request->only('file', 'data');
+            $body = $request->all();
 
             $file = $body['file'];
             $data = $body['data'];
@@ -119,7 +119,7 @@ class AudiosController extends Controller
             //Storage::disk('local')->put($data['name'], $file);
             //$url = Storage::url($data['name']);
 
-            return response()->json(['nombre' => $data->name], 202);
+            return response()->json($data['data'], 202);
  
 
 
