@@ -22,6 +22,12 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
+$router->get('delete/storage/{directory}/{filename}', function ($directory, $filename)
+    {
+        Storage::delete($directory.'/'.$filename);
+    }
+);
+
 
 $router->group(['prefix' => 'v1'], function($router)
 {

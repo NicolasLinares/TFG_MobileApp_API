@@ -112,12 +112,13 @@ class AudiosController extends Controller
     {
 
             $body = $request->all();
+
             $file = $body['file'];
+            $data = json_decode($body['data']);
 
-            $name = 'Audio2-'.Str::random(5);
-            Storage::disk('local')->put($name, $file);
 
-            $url = Storage::url($name);
+            Storage::disk('local')->put($data->name, $file);
+            $url = Storage::url($data->name);
 
             return response()->json($url, 202);
  
