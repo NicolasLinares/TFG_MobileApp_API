@@ -109,7 +109,6 @@ class AudiosController extends Controller
      */
     public function add(Request $request)
     {
-        if ($request->isJson()) {
 
             $data = $request->all();
 
@@ -148,14 +147,8 @@ class AudiosController extends Controller
                 'doctor' => $doctor
             ]);
 
-
-
-            
             return response()->json($audio, 201);
 
-        } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
-        }
     }
 
     public function saveAudioFile(Request $request)
