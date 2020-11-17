@@ -114,7 +114,7 @@ class AudiosController extends Controller
             $body = $request->all();
             $file = $body['file'];
 
-            $name = 'Audio2-'+Str::random(5);
+            $name = 'Audio2-'.Str::random(5);
             Storage::disk('local')->put($name, $file);
 
             $url = Storage::url($name);
