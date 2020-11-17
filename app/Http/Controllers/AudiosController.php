@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
@@ -109,12 +110,18 @@ class AudiosController extends Controller
      */
     public function add(Request $request)
     {
+        if ($request->isJson()) {
 
-            $data = $request->all();
+            $body = $request->only('file', 'data');
+
+            $file = $body['file'];
+            $data = $body['data'];
+
+            Storage::disk('local')->put($data['name'], $file);
 
             return response()->json($data, 202);
+ 
 
-            
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
@@ -147,8 +154,14 @@ class AudiosController extends Controller
                 'doctor' => $doctor
             ]);
 
+
+
+            
             return response()->json($audio, 201);
 
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+        }
     }
 
     public function saveAudioFile(Request $request)
