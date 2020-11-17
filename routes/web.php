@@ -16,7 +16,7 @@
 
 use Illuminate\Support\Facades\Storage;
 
-$router->get('storage/{filename}', function ($filename)
+$router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
         return Storage::download($filename);
     }
