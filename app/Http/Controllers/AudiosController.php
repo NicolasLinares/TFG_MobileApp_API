@@ -111,7 +111,11 @@ class AudiosController extends Controller
     {
         if ($request->isJson()) {
 
-            $data = $request->only('name', 'extension', 'localpath', 'tag', 'description');
+            $data = $request->all();
+
+            return response()->json($data, 202);
+
+            
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
