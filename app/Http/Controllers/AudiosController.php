@@ -119,7 +119,7 @@ class AudiosController extends Controller
             //Storage::disk('local')->put($data['name'], $file);
             //$url = Storage::url($data['name']);
 
-            return response()->json(['nombre' => $data['name']], 202);
+            return response()->json(['nombre' => $data->name], 202);
  
 
 
