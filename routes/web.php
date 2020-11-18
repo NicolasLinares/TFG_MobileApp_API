@@ -22,23 +22,18 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
+// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
 $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
         Storage::delete('storage/app/'.$directory.'/'.$filename);
     }
 );
 
-use Illuminate\Support\Facades\File;
 
-$router->get('delete/file', function ()
+// https://pln.inf.um.es/TFG_MobileApp_API/public/delete/storage/24
+$router->get('delete/storage/{dir}', function ($dir)
     {
-        File::deleteDirectory('/var/www/html/TFG_MobileApp_API/storage/app/24');
-    }
-);
-
-$router->get('delete/storage', function ()
-    {
-        Storage::disk('local')->deleteDirectory('24');
+        Storage::disk('local')->deleteDirectory($dir);
     }
 );
 
