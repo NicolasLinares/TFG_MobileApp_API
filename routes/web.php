@@ -22,22 +22,25 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
-$router->get('storage/{directory}/{filename}', function ($directory, $filename)
+$router->get('delete/storage/{directory}/{filename}', function ($directory, $filename)
     {
         Storage::delete($directory.'/'.$filename);
     }
 );
 
-$router->get('storage/{dir}', function ($dir)
+use Illuminate\Support\Facades\File;
+
+$router->get('delete/file', function ()
     {
-        Storage::disk('local')->deleteDirectory($dir);
+        File::deleteDirectory('24');
     }
 );
 
-
-
-
-
+$router->get('delete/storage', function ()
+    {
+        Storage::deleteDirectory('24');
+    }
+);
 
 
 
