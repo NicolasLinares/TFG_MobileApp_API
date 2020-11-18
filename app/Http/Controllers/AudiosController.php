@@ -175,7 +175,7 @@ class AudiosController extends Controller
         return response(dd($file), 200);
     }
 
-    function downloadAudioFile($dir, $name, Request $request)
+    function downloadAudioFile($directory, $filename, Request $request)
     {
 
         if ($request->isJson()) {
@@ -183,8 +183,8 @@ class AudiosController extends Controller
 
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
-            if ($doctor === $dir) {
-                return Storage::download($dir . '/' . $name);
+            if ($doctor === $directory) {
+                return Storage::download($directory . '/' . $filename);
             } else {
                 return response()->json(['error' => 'Usuario no autorizado.'], 401);
             }
