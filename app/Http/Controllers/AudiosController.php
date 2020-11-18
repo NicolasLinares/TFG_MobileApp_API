@@ -113,26 +113,31 @@ class AudiosController extends Controller
 
             $body = $request->all();
 
-            $data = $body['data']; // información del audio (name, extension, patient code, localpath...)
+            $data = json_decode($body['data']); // información del audio (name, extension, patient code, localpath...)
  
+
+            return response()->json([
+                'data' => $data,
+                'root' =>$request->root(), 
+                'url' =>$request->url(),
+                'full' =>$request->fullUrl(),
+            ], 202);
+
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
                 'name'=> 'required',
                 'extension' => 'required',
                 'tag' => 'required',
                 'localpath' => 'required',
-            ]);
+            ]
+            );
 
             if ($validator->fails()) {
                 return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
             }
             
 
-            return response()->json([
-                                    'root' =>$request->root(), 
-                                    'url' =>$request->url(),
-                                    'full' =>$request->fullUrl(),
-                                ], 202);
+
 
             // FILESYSTEM
             // -----------------------------------------------------------------

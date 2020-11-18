@@ -28,13 +28,6 @@ $router->get('delete/storage/{directory}/{filename}', function ($directory, $fil
     }
 );
 
-use Illuminate\Support\Facades\File;
-
-$router->get('delete/file', function ()
-    {
-        File::deleteDirectory('24');
-    }
-);
 
 $router->get('delete/storage', function ()
     {
