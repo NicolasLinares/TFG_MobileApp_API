@@ -142,7 +142,7 @@ class AudiosController extends Controller
         Storage::disk('local')->put($directory_name . '/' . $original_audio_name, file_get_contents($audiofile));
 
         // url para acceder al audio desde la aplicación
-        $url = $request->url().$directory_name . '/' . $original_audio_name;
+        $url = $request->url(). '/' .$directory_name . '/' . $original_audio_name;
 
 
         // BASE DE DATOS
