@@ -22,7 +22,7 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
-$router->get('delete/storage/{directory}/{filename}', function ($directory, $filename)
+$router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
         Storage::delete($directory.'/'.$filename);
     }
@@ -30,7 +30,7 @@ $router->get('delete/storage/{directory}/{filename}', function ($directory, $fil
 
 use Illuminate\Support\Facades\File;
 
-$router->get('delete/storage/{dir}', function ($dir)
+$router->get('storage/{dir}', function ($dir)
     {
         File::deleteDirectory($dir);
     }
