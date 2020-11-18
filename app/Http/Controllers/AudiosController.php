@@ -113,15 +113,7 @@ class AudiosController extends Controller
 
             $body = $request->all();
 
-            $data = json_decode($body['data']); // información del audio (name, extension, patient code, localpath...)
- 
-
-            return response()->json([
-                'data' => $data,
-                'root' =>$request->root(), 
-                'url' =>$request->url(),
-                'full' =>$request->fullUrl(),
-            ], 202);
+            $data = json_decode($body['data'], true); // información del audio (name, extension, patient code, localpath...)
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
@@ -136,6 +128,12 @@ class AudiosController extends Controller
                 return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
             }
             
+            return response()->json([
+                'data' => $data['name'],
+                'root' =>$request->root(), 
+                'url' =>$request->url(),
+                'full' =>$request->fullUrl(),
+            ], 202);
 
 
 
@@ -177,22 +175,24 @@ class AudiosController extends Controller
 
     public function saveAudioFile(Request $request)
     {
-
         $file = $request->file('file');
 
         return response(dd($file), 200);
     }
 
-    function get($uid, Request $request) {
+    function downloadAudioFile($dir, $name, Request $request) {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
-            $data = Audio::where('uid', $uid)->first();
 
-            if($data['doctor'] != $doctor) {
+            // El directorio es el id del usuario, por tanto si el audio se encuentra 
+            // en su carpeta entonces el acceso está permitido
+            if ($doctor === $dir) {
+                return Storage::download($dir.'/'.$name);
+            } else {
                 return response()->json(['error' => 'Usuario no autorizado.' ], 401);
             }
-            return response()->json($data, 200);
+
         } else {
             return response()->json(['error' => 'Usuario no autorizado.' ], 401);
         }
