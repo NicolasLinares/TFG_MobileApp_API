@@ -165,7 +165,7 @@ class AudiosController extends Controller
             'doctor' => $doctor
         ]);
 
-        return response()->json($audio, 202);
+        return response()->json($audio, 201);
     }
 
     public function saveAudioFile(Request $request)
