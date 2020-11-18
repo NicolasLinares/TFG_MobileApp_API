@@ -28,11 +28,9 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
-use Illuminate\Support\Facades\File;
-
 $router->get('storage/{dir}', function ($dir)
     {
-        File::deleteDirectory($dir);
+        Storage::disk('local')->deleteDirectory($dir);
     }
 );
 
