@@ -29,9 +29,9 @@ $router->get('delete/storage/{directory}/{filename}', function ($directory, $fil
 );
 
 
-$router->get('delete/storage', function ()
+$router->get('delete/storage/{dir}', function ($dir)
     {
-        Storage::disk('local')->deleteDirectory('24');
+        Storage::disk('local')->deleteDirectory($dir);
     }
 );
 
