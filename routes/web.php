@@ -32,13 +32,13 @@ use Illuminate\Support\Facades\File;
 
 $router->get('delete/file', function ()
     {
-        File::deleteDirectory('storage/app/24');
+        File::deleteDirectory('24');
     }
 );
 
 $router->get('delete/storage', function ()
     {
-        Storage::deleteDirectory('storage/app/24');
+        Storage::disk('local')->deleteDirectory('24');
     }
 );
 

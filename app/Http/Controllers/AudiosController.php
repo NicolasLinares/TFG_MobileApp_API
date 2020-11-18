@@ -113,7 +113,7 @@ class AudiosController extends Controller
 
             $body = $request->all();
 
-            $data = json_decode($body['data']); // información del audio (name, extension, patient code, localpath...)
+            $data = $body['data']; // información del audio (name, extension, patient code, localpath...)
  
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
