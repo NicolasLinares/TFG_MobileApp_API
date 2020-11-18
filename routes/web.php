@@ -38,6 +38,22 @@ $router->get('delete/storage/{dir}', function ($dir)
 );
 
 
+// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
+$router->get('exists/{directory}/{filename}', function ($directory, $filename)
+    {
+        $value = Storage::disk('local')->exists($directory.'/'.$filename);
+        return response()->json($value, 200);
+    }
+);
+
+// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
+$router->get('rename/{directory}/{filename}', function ($directory, $filename)
+    {
+        Storage::disk('local')->move($directory.'/'.$filename, $directory.'/renombrado.m4a');
+    }
+);
+
+
 
 
 
