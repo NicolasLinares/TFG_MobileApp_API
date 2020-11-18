@@ -113,18 +113,8 @@ class AudiosController extends Controller
 
             $body = $request->all();
 
-            $file = $body['file'];
-            $data = json_decode($body['data']);
-
-            $doctor = Auth::id();
-            $name = $data->name;
-            Storage::disk('local')->put($doctor.'/'.$name, file_get_contents($file));
-            $url = Storage::url($name);
-
-            return response()->json($url, 202);
+            $data = json_decode($body['data']); // información del audio (name, extension, patient code, localpath...)
  
-
-
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
                 'name'=> 'required',
@@ -136,8 +126,29 @@ class AudiosController extends Controller
             if ($validator->fails()) {
                 return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
             }
+            
+
+            return response()->json([
+                                    'root' =>$request->root(), 
+                                    'url' =>$request->url(),
+                                    'full' =>$request->fullUrl(),
+                                ], 202);
+
+            // FILESYSTEM
+            // -----------------------------------------------------------------
+
+            $audiofile = $body['file']; // archivo de audio
 
             $doctor = Auth::id();
+
+            $directory_name = $doctor; // user id
+            $original_audio_name = $data->name;  
+            Storage::disk('local')->put($directory_name.'/'.$original_audio_name, file_get_contents($audiofile));
+
+            
+
+            // BASE DE DATOS
+            // -----------------------------------------------------------------
             $uid = Str::random(32);
             // Evitamos que se cree un número random igual, debe ser único
             if(Audio::where('uid',$uid)->exists()) {
@@ -146,16 +157,15 @@ class AudiosController extends Controller
 
             $audio = Audio::create([
                 'uid'=> $uid,
-                'name'=> $data['name'],
-                'extension'=> $data['extension'], 
-                'localpath' => $data['localpath'],               
-                'url' => null,             
-                'tag' => $data['tag'],
-                'description' => $data['description'] != "" ? $data['description'] : null,
+                'name'=> $data->name,
+                'extension'=> $data->extension, 
+                'localpath' => $data->localpath,               
+                'url' => $url,             
+                'tag' => $data->tag,
+                'description' => $data->description != "" ? $data->description : null,
                 'transcription' => null,
                 'doctor' => $doctor
             ]);
-
 
             return response()->json($audio, 201);
     }

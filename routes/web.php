@@ -28,15 +28,19 @@ $router->get('delete/storage/{directory}/{filename}', function ($directory, $fil
     }
 );
 
+use Illuminate\Support\Facades\File;
 
-use Illuminate\Filesystem\Filesystem;
-$router->get('delete/all', function ()
+$router->get('delete/file', function ()
     {
-        $file = new Filesystem;
-        $file->cleanDirectory('storage/app/');
+        File::deleteDirectory('storage/app/24');
     }
 );
 
+$router->get('delete/storage', function ()
+    {
+        Storage::deleteDirectory('storage/app/24');
+    }
+);
 
 
 
