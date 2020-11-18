@@ -32,13 +32,13 @@ use Illuminate\Support\Facades\File;
 
 $router->get('delete/file', function ()
     {
-        File::deleteDirectory('24');
+        File::deleteDirectory('/var/www/html/TFG_MobileApp_API/storage/app/24');
     }
 );
 
 $router->get('delete/storage', function ()
     {
-        Storage::deleteDirectory('24');
+        Storage::disk('local')->deleteDirectory('24');
     }
 );
 
