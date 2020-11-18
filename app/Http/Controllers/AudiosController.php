@@ -140,13 +140,11 @@ class AudiosController extends Controller
 
         $directory_name = $doctor; // user id
         $original_audio_name = $data['persist_name'].'.'.$data['extension'];
-        return response()->json($original_audio_name, 202);
 
         Storage::disk('local')->put($directory_name . '/' . $original_audio_name, file_get_contents($audiofile));
 
         // url para acceder al audio desde la aplicación
         $url = $request->url(). '/' .$directory_name . '/' . $original_audio_name;
-
 
         // BASE DE DATOS
         // -----------------------------------------------------------------
