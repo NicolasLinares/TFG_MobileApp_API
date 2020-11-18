@@ -22,9 +22,9 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     }
 );
 
-$router->get('delete/storage/{directory}/{filename}', function ($directory, $filename)
+$router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
-        Storage::delete($directory.'/'.$filename);
+        Storage::delete('storage/app/'.$directory.'/'.$filename);
     }
 );
 
