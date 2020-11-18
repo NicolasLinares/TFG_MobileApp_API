@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\Storage;
 
 $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
-        return Storage::download($directory.'/'.$filename);
+        return Storage::download($directory.'/'.$filename);             // Download file
     }
 );
 
 // https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
 $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
-        Storage::delete('storage/app/'.$directory.'/'.$filename);
+        Storage::delete('storage/app/'.$directory.'/'.$filename);           // Delete specific file
     }
 );
 
@@ -33,23 +33,24 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
 // https://pln.inf.um.es/TFG_MobileApp_API/public/delete/storage/24
 $router->get('delete/storage/{dir}', function ($dir)
     {
-        Storage::disk('local')->deleteDirectory($dir);
+        Storage::disk('local')->deleteDirectory($dir);              // Delete all in dir
     }
 );
 
 
-// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
+// https://pln.inf.um.es/TFG_MobileApp_API/public/exists/24/file.m4a
 $router->get('exists/{directory}/{filename}', function ($directory, $filename)
     {
-        $value = Storage::disk('local')->exists($directory.'/'.$filename);
+        $value = Storage::disk('local')->exists($directory.'/'.$filename);      // Exists
         return response()->json($value, 200);
     }
 );
 
-// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
+
+// https://pln.inf.um.es/TFG_MobileApp_API/public/rename/24/file.m4a
 $router->get('rename/{directory}/{filename}', function ($directory, $filename)
     {
-        Storage::disk('local')->move($directory.'/'.$filename, $directory.'/renombrado.m4a');
+        Storage::disk('local')->move($directory.'/'.$filename, $directory.'/renombrado.m4a');   // renombrar
     }
 );
 
