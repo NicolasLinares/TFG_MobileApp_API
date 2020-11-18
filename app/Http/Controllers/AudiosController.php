@@ -11,22 +11,23 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Carbon\Carbon;   
+use Carbon\Carbon;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
 
 class AudiosController extends Controller
 {
-    function getAll(Request $request) {
+    function getAll(Request $request)
+    {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where('doctor', $doctor)
-                            ->orderBy('id', 'desc')
-                            ->simplePaginate(10);
+                ->orderBy('id', 'desc')
+                ->simplePaginate(10);
 
             /*
             $array = Audio::select('*')
@@ -47,14 +48,13 @@ class AudiosController extends Controller
             return response()->json($paginated->toArray(), 200);
             */
             return response()->json($data, 200);
-
-
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
-    function getAllTag($tag, Request $request) {
+    function getAllTag($tag, Request $request)
+    {
 
         if ($request->isJson()) {
 
@@ -62,20 +62,20 @@ class AudiosController extends Controller
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
-                                    ['doctor', '=', $doctor],
-                                    ['tag', '=', $tag]
-                                ])
-                                ->orderBy('id', 'desc')
-                                ->simplePaginate(10);
+                ['doctor', '=', $doctor],
+                ['tag', '=', $tag]
+            ])
+                ->orderBy('id', 'desc')
+                ->simplePaginate(10);
 
             return response()->json($data, 200);
-
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
-    function deleteAll(Request $request) {
+    function deleteAll(Request $request)
+    {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
@@ -83,22 +83,23 @@ class AudiosController extends Controller
             Audio::where('doctor', $doctor)->delete();
             return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 200);
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
-    function getTags(Request $request) {
+    function getTags(Request $request)
+    {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
             $data = Audio::select('tag')
-                            ->distinct('tag')
-                            ->where('doctor', $doctor)
-                            ->orderBy('tag', 'desc')
-                            ->get();
+                ->distinct('tag')
+                ->where('doctor', $doctor)
+                ->orderBy('tag', 'desc')
+                ->get();
             return response()->json($data, 200);
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
@@ -111,66 +112,60 @@ class AudiosController extends Controller
     public function add(Request $request)
     {
 
-            $body = $request->all();
+        $body = $request->all();
 
-            $data = json_decode($body['data'], true); // información del audio (name, extension, patient code, localpath...)
+        // con true convierte a array
+        $data = json_decode($body['data'], true); // información del audio (name, extension, patient code, localpath...)
 
-            // Se comprueba que los campos cumplen el formato
-            $validator = Validator::make($data, [
-                'name'=> 'required',
-                'extension' => 'required',
-                'tag' => 'required',
-                'localpath' => 'required',
-            ]
-            );
+        // Se comprueba que los campos cumplen el formato
+        $validator = Validator::make($data, [
+            'name' => 'required',
+            'extension' => 'required',
+            'tag' => 'required',
+            'localpath' => 'required',
+        ]);
 
-            if ($validator->fails()) {
-                return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
-            }
-            
-            return response()->json([
-                'data' => $data['name'],
-                'root' =>$request->root(), 
-                'url' =>$request->url(),
-                'full' =>$request->fullUrl(),
-            ], 202);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
+        }
 
 
+        // FILESYSTEM
+        // -----------------------------------------------------------------
 
-            // FILESYSTEM
-            // -----------------------------------------------------------------
+        $audiofile = $body['file']; // archivo de audio
 
-            $audiofile = $body['file']; // archivo de audio
+        $doctor = Auth::id();
 
-            $doctor = Auth::id();
+        $directory_name = $doctor; // user id
+        $original_audio_name = $data['name'];
+        Storage::disk('local')->put($directory_name . '/' . $original_audio_name, file_get_contents($audiofile));
 
-            $directory_name = $doctor; // user id
-            $original_audio_name = $data->name;  
-            Storage::disk('local')->put($directory_name.'/'.$original_audio_name, file_get_contents($audiofile));
+        // url para acceder al audio desde la aplicación
+        $url = $request->url().$directory_name . '/' . $original_audio_name;
 
-            
 
-            // BASE DE DATOS
-            // -----------------------------------------------------------------
+        // BASE DE DATOS
+        // -----------------------------------------------------------------
+        $uid = Str::random(32);
+        // Evitamos que se cree un número random igual, debe ser único
+        if (Audio::where('uid', $uid)->exists()) {
             $uid = Str::random(32);
-            // Evitamos que se cree un número random igual, debe ser único
-            if(Audio::where('uid',$uid)->exists()) {
-                $uid = Str::random(32);
-            }
+        }
 
-            $audio = Audio::create([
-                'uid'=> $uid,
-                'name'=> $data->name,
-                'extension'=> $data->extension, 
-                'localpath' => $data->localpath,               
-                'url' => $url,             
-                'tag' => $data->tag,
-                'description' => $data->description != "" ? $data->description : null,
-                'transcription' => null,
-                'doctor' => $doctor
-            ]);
+        $audio = Audio::create([
+            'uid' => $uid,
+            'name' => $data['name'],
+            'extension' => $data['extension'],
+            'localpath' => $data['localpath'],
+            'url' => $url,
+            'tag' => $data['tag'],
+            'description' => $data['description'] != "" ? $data['description'] : null,
+            'transcription' => null,
+            'doctor' => $doctor
+        ]);
 
-            return response()->json($audio, 201);
+        return response()->json($audio, 202);
     }
 
     public function saveAudioFile(Request $request)
@@ -180,7 +175,8 @@ class AudiosController extends Controller
         return response(dd($file), 200);
     }
 
-    function downloadAudioFile($dir, $name, Request $request) {
+    function downloadAudioFile($dir, $name, Request $request)
+    {
 
         if ($request->isJson()) {
             $doctor = Auth::id();
@@ -188,37 +184,37 @@ class AudiosController extends Controller
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
             if ($doctor === $dir) {
-                return Storage::download($dir.'/'.$name);
+                return Storage::download($dir . '/' . $name);
             } else {
-                return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+                return response()->json(['error' => 'Usuario no autorizado.'], 401);
             }
-
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
-    function delete($uid, Request $request) {
+    function delete($uid, Request $request)
+    {
 
         if ($request->isJson()) {
             // Se comprueba que el usuario que borra sea el dueño del audio
             $doctor = Auth::id();
             $user = Audio::select('doctor')->where('uid', $uid)->first();
 
-            if($user['doctor'] != $doctor) {
-                return response()->json(['error' => 'Usuario no autorizado' ], 401);
+            if ($user['doctor'] != $doctor) {
+                return response()->json(['error' => 'Usuario no autorizado'], 401);
             }
             // Se borra el audio
             Audio::where('uid', $uid)->delete();
 
             return response()->json(['message' => 'Audio borrado correctamente'], 200);
-        
         } else {
-            return response()->json(['error' => 'Usuario no autorizado' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado'], 401);
         }
     }
 
-    function updateDescription($uid, Request $request) {
+    function updateDescription($uid, Request $request)
+    {
         if ($request->isJson()) {
 
             $data = $request->only('description');
@@ -229,22 +225,22 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor]
             ])->first();
 
-            if($audio) {
+            if ($audio) {
 
                 $audio->description = $data['description'] === "" ? null : $data['description'];
                 $audio->save();
 
                 return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
             } else {
-                return response()->json(['error' => 'Audio no encontrado.' ], 404);
+                return response()->json(['error' => 'Audio no encontrado.'], 404);
             }
-
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
 
-    function updateName($uid, Request $request) {
+    function updateName($uid, Request $request)
+    {
         if ($request->isJson()) {
 
             $data = $request->only('name');
@@ -255,7 +251,7 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor]
             ])->first();
 
-            if($audio) {
+            if ($audio) {
 
                 if ($data['name'] !== "") {
                     $audio->name = $data['name'];
@@ -264,14 +260,11 @@ class AudiosController extends Controller
                 } else {
                     return response()->json(['error' => 'El nombre introducido no es válido'], 400);
                 }
-
             } else {
-                return response()->json(['error' => 'Audio no encontrado.' ], 404);
+                return response()->json(['error' => 'Audio no encontrado.'], 404);
             }
-
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.' ], 401);
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
-
 }
