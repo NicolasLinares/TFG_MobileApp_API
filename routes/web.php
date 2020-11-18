@@ -28,15 +28,12 @@ $router->get('delete/storage/{directory}/{filename}', function ($directory, $fil
     }
 );
 
+
+use Illuminate\Filesystem\Filesystem;
 $router->get('delete/all', function ()
     {
-        Storage::delete(
-            [
-                '24/fvjVHsGHIKOspnRCIdNjy0mKOalqmj5YnVruJLcm.m4a',
-                '24/xmmPQS2rYVUW4tZN0Mhakt4fDw88qqNIKQMlmnUh.m4a',
-                '24/kq8Q5fVl0DzRUbf8inA5z2F4ZFwytb78sRAhQJb8.m4a',
-            ]
-        );
+        $file = new Filesystem;
+        $file->cleanDirectory('storage/app/');
     }
 );
 

@@ -118,7 +118,7 @@ class AudiosController extends Controller
 
             $doctor = Auth::id();
             $name = $data->name;
-            Storage::disk('local')->put($doctor.'/'.$name, $file);
+            Storage::disk('local')->put($doctor.'/'.$name, file_get_contents($file));
             $url = Storage::url($name);
 
             return response()->json($url, 202);
