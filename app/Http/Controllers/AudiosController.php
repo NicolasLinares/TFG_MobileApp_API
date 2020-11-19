@@ -170,12 +170,7 @@ class AudiosController extends Controller
         return response()->json($audio, 201);
     }
 
-    public function saveAudioFile(Request $request)
-    {
-        $file = $request->file('file');
 
-        return response(dd($file), 200);
-    }
 
     function downloadAudioFile($directory, $filename, Request $request)
     {
@@ -209,6 +204,7 @@ class AudiosController extends Controller
             // Se borra el audio
             Audio::where('uid', $uid)->delete();
 
+            
             return response()->json(['message' => 'Audio borrado correctamente'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado'], 401);

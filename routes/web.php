@@ -25,7 +25,7 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
 // https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
 $router->get('storage/{directory}/{filename}', function ($directory, $filename)
     {
-        Storage::delete('storage/app/'.$directory.'/'.$filename);           // Delete specific file
+        Storage::disk('local')->delete($directory.'/'.$filename);           // Delete specific file
     }
 );
 
@@ -89,7 +89,6 @@ $router->group(['prefix' => 'v1'], function($router)
         $router->post('audio', ['uses' => 'AudiosController@add']);
         $router->get('audio/{directory}/{filename}', ['uses' => 'AudiosController@downloadAudioFile']);
         $router->delete('audio/{uid}', ['uses' => 'AudiosController@delete']);
-        $router->post('audio/{uid}', ['uses' => 'AudiosController@saveAudioFile']);
         
         $router->put('audio/description/{uid}', ['uses' => 'AudiosController@updateDescription']);
         $router->put('audio/name/{uid}', ['uses' => 'AudiosController@updateName']);
