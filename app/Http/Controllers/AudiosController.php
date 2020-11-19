@@ -202,6 +202,10 @@ class AudiosController extends Controller
                     ['doctor', '=', $doctor],
                 ]
             )->first();
+            
+            if ($audio == null) {
+                return response()->json('error', 404);
+            }
 
             return response()->json($audio, 200);
 
