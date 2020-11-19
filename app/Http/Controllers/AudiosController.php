@@ -172,21 +172,25 @@ class AudiosController extends Controller
 
 
 
-    function downloadAudioFile($directory, $filename, Request $request)
+    function downloadAudioFile($uid, Request $request)
     {
-
         if ($request->isJson()) {
             $doctor = Auth::id();
 
+            $audio = Audio::where([
+                ['uid', '=', $uid],
+                ['doctor', '=', $doctor]
+            ])->first();
+
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
-            if ($doctor == $directory) {
-                return Storage::download($directory . '/' . $filename);
+            if ($audio) {
+                return Storage::download($doctor . '/' . $audio['persist_name'] . $audio['extension']);
             } else {
-                return response()->json(['error' => 'Usuario no autorizado.'], 401);
+                return response()->json(['error' => 'Audio no encontrado'], 404);
             }
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+            return response()->json(['error' => 'Usuario no autorizado'], 401);
         }
     }
 
@@ -196,26 +200,23 @@ class AudiosController extends Controller
         if ($request->isJson()) {
             // Se comprueba que el usuario que borra sea el dueño del audio
             $doctor = Auth::id();
-            $audio = Audio::select('persist_name', 'extension')->where(
-                [
-                    ['uid', '=', '123'],
-                    ['doctor', '=', $doctor],
-                ]
-            )->first();
-            
-            if ($audio == null) {
-                return response()->json('error', 404);
+
+            $audio = Audio::where([
+                ['uid', '=', $uid],
+                ['doctor', '=', $doctor]
+            ])->first();
+
+            if ($audio) {
+                // Se borra el audio en la BBDD
+                Audio::where('uid', $uid)->delete();
+                // Se borra el audio en el filesystem
+                // El directorio es el id del usuario, por tanto si el audio se encuentra 
+                // en su carpeta entonces el acceso está permitido
+                Storage::disk('local')->delete($doctor . '/' . $audio['persist_name'] . $audio['extension']);
+                return response()->json(['message' => 'Audio borrado correctamente'], 200);
+            } else {
+                return response()->json(['error' => 'Audio no encontrado'], 404);
             }
-
-            return response()->json($audio, 200);
-
-            // Se borra el audio en la BBDD
-            Audio::where('uid', $uid)->delete();
-
-            // Se borra el audio en el filesystem
-            Storage::disk('local')->delete($doctor . '/' . $audio['persist_name'] . $audio['extension']);
-
-            return response()->json(['message' => 'Audio borrado correctamente'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado'], 401);
         }
@@ -240,10 +241,10 @@ class AudiosController extends Controller
 
                 return response()->json(['message' => 'La descripción se ha actualizado correctamente'], 201);
             } else {
-                return response()->json(['error' => 'Audio no encontrado.'], 404);
+                return response()->json(['error' => 'Audio no encontrado'], 404);
             }
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+            return response()->json(['error' => 'Usuario no autorizado'], 401);
         }
     }
 
@@ -269,10 +270,10 @@ class AudiosController extends Controller
                     return response()->json(['error' => 'El nombre introducido no es válido'], 400);
                 }
             } else {
-                return response()->json(['error' => 'Audio no encontrado.'], 404);
+                return response()->json(['error' => 'Audio no encontrado'], 404);
             }
         } else {
-            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+            return response()->json(['error' => 'Usuario no autorizado'], 401);
         }
     }
 }
