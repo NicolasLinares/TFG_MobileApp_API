@@ -87,7 +87,7 @@ $router->group(['prefix' => 'v1'], function($router)
 
 
         $router->post('audio', ['uses' => 'AudiosController@add']);
-        $router->get('audio/{directory}/{filename}', ['uses' => 'AudiosController@downloadAudioFile']);
+        $router->get('audio/{uid}', ['uses' => 'AudiosController@downloadAudioFile']);
         $router->delete('audio/{uid}', ['uses' => 'AudiosController@delete']);
         
         $router->put('audio/description/{uid}', ['uses' => 'AudiosController@updateDescription']);

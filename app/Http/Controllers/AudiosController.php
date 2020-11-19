@@ -139,12 +139,12 @@ class AudiosController extends Controller
         $doctor = Auth::id();
 
         $directory_name = $doctor; // user id
-        $original_audio_name = $data['persist_name'].'.'.$data['extension'];
+        $original_audio_name = $data['persist_name'] . '.' . $data['extension'];
 
         Storage::disk('local')->put($directory_name . '/' . $original_audio_name, file_get_contents($audiofile));
 
         // url para acceder al audio desde la aplicación
-        $url = $request->url(). '/' .$directory_name . '/' . $original_audio_name;
+        $url = $request->url() . '/' . $directory_name . '/' . $original_audio_name;
 
         // BASE DE DATOS
         // -----------------------------------------------------------------
@@ -196,15 +196,21 @@ class AudiosController extends Controller
         if ($request->isJson()) {
             // Se comprueba que el usuario que borra sea el dueño del audio
             $doctor = Auth::id();
-            $user = Audio::select('doctor')->where('uid', $uid)->first();
+            $audio = Audio::select('persist_name', 'extension')->where(
+                [
+                    ['uid', '=', '123'],
+                    ['doctor', '=', $doctor],
+                ]
+            )->first();
 
-            if ($user['doctor'] != $doctor) {
-                return response()->json(['error' => 'Usuario no autorizado'], 401);
-            }
-            // Se borra el audio
+            return response()->json($audio, 200);
+
+            // Se borra el audio en la BBDD
             Audio::where('uid', $uid)->delete();
 
-            
+            // Se borra el audio en el filesystem
+            Storage::disk('local')->delete($doctor . '/' . $audio['persist_name'] . $audio['extension']);
+
             return response()->json(['message' => 'Audio borrado correctamente'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado'], 401);
