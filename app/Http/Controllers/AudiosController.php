@@ -120,7 +120,6 @@ class AudiosController extends Controller
         // Se comprueba que los campos cumplen el formato
         $validator = Validator::make($data, [
             'name' => 'required',
-            'persist_name' => 'required',
             'extension' => 'required',
             'tag' => 'required',
             'localpath' => 'required',
@@ -139,12 +138,11 @@ class AudiosController extends Controller
         $doctor = Auth::id();
 
         $directory_name = $doctor; // user id
-        $original_audio_name = $data['persist_name'] . '.' . $data['extension'];
 
-        Storage::disk('local')->put($directory_name . '/' . $original_audio_name, file_get_contents($audiofile));
+        Storage::disk('local')->put($directory_name . '/' . $data['localpath'], file_get_contents($audiofile));
 
         // url para acceder al audio desde la aplicación
-        $url = $request->url() . '/' . $directory_name . '/' . $original_audio_name;
+        $url = $request->url() . '/' . $directory_name . '/' . $data['localpath'];
 
         // BASE DE DATOS
         // -----------------------------------------------------------------
@@ -157,7 +155,6 @@ class AudiosController extends Controller
         $audio = Audio::create([
             'uid' => $uid,
             'name' => $data['name'],
-            'persist_name' => $data['persist_name'],
             'extension' => $data['extension'],
             'localpath' => $data['localpath'],
             'url' => $url,

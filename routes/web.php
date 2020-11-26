@@ -30,7 +30,7 @@ $router->get('storage/{directory}/{filename}', function ($directory, $filename)
 );
 
 
-// https://pln.inf.um.es/TFG_MobileApp_API/public/delete/storage/24
+// https://pln.inf.um.es/TFG_MobileApp_API/public/delete/24
 $router->get('delete/{dir}', function ($dir)
     {
         Storage::disk('local')->deleteDirectory($dir);              // Delete all in dir
