@@ -182,7 +182,7 @@ class AudiosController extends Controller
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
             if ($audio) {
-                return Storage::download($doctor . '/' . $audio['persist_name'] . '.' . $audio['extension']);
+                return Storage::download($doctor . '/' . $audio['localpath']);
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
             }
@@ -209,7 +209,7 @@ class AudiosController extends Controller
                 // Se borra el audio en el filesystem
                 // El directorio es el id del usuario, por tanto si el audio se encuentra 
                 // en su carpeta entonces el acceso está permitido
-                Storage::disk('local')->delete($doctor . '/' . $audio['persist_name'] . '.' . $audio['extension']);
+                Storage::disk('local')->delete($doctor . '/' . $audio['localpath']);
                 return response()->json(['message' => 'Audio borrado correctamente'], 200);
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
