@@ -210,7 +210,19 @@ class AudiosController extends Controller
                 // El directorio es el id del usuario, por tanto si el audio se encuentra 
                 // en su carpeta entonces el acceso está permitido
                 Storage::disk('local')->delete($doctor . '/' . $audio['localpath']);
-                return response()->json(['message' => 'Audio borrado correctamente'], 200);
+
+                $n_audios = Audio::where([
+                    ['tag', '=', $audio['tag']],
+                    ['doctor', '=', $doctor]
+                ])->count();
+
+                return response()->json(
+                    [
+                        'tag' => $audio['tag'],
+                        'count' => $n_audios,
+                        'message' => 'Audio borrado correctamente',
+                    ], 
+                    200);
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
             }
