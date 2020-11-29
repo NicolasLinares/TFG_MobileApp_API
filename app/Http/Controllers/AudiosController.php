@@ -53,9 +53,8 @@ class AudiosController extends Controller
         }
     }
 
-    function getAllTag($tag, Request $request)
+    function filterByTag($tag, Request $request)
     {
-
         if ($request->isJson()) {
 
             $doctor = Auth::id();
@@ -73,6 +72,26 @@ class AudiosController extends Controller
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
     }
+
+    function searchByName($name, Request $request)
+    {
+        if ($request->isJson()) {
+
+            $doctor = Auth::id();
+
+            // Paginación ordenada de forma descendente (primero los audios más recientes)
+            $data = Audio::where([
+                ['doctor', '=', $doctor],
+                ['name', 'LIKE', '%'.$name.'%']
+            ])
+                ->orderBy('id', 'desc');
+
+            return response()->json($data, 200);
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+        }
+    }
+
 
     function deleteAll(Request $request)
     {
