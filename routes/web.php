@@ -83,7 +83,8 @@ $router->group(['prefix' => 'v1'], function($router)
         $router->get('audios', ['uses' => 'AudiosController@getAll']);
         $router->delete('audios', ['uses' => 'AudiosController@deleteAll']);
         $router->get('tags', ['uses' => 'AudiosController@getTags']);
-        $router->get('audios/{tag}', ['uses' => 'AudiosController@getAllTag']);
+        $router->get('audios/filter/{tag}', ['uses' => 'AudiosController@filterByTag']);
+        $router->get('audios/search/{name}', ['uses' => 'AudiosController@searchByName']);
 
 
         $router->post('audio', ['uses' => 'AudiosController@add']);
