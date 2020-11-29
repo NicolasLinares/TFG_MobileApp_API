@@ -80,11 +80,12 @@ class AudiosController extends Controller
             $doctor = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
-            $data = Audio::where([
+            $data = Audio::query()
+            ->where([
                 ['doctor', '=', $doctor],
-                ['name', 'LIKE', '%'.$name.'%']
+                ['name', 'LIKE', '%{$name}%']
             ])
-                ->orderBy('id', 'desc');
+            ->get();
 
             return response()->json($data, 200);
         } else {
