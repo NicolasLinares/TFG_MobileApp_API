@@ -84,6 +84,7 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor],
                 ['name', 'LIKE', '%'.$name.'%']
             ])
+            ->orderBy('id', 'desc')
             ->get();
 
             return response()->json($data, 200);
