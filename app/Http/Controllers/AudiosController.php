@@ -101,6 +101,10 @@ class AudiosController extends Controller
             $doctor = Auth::id();
             // Se borran todos los audios asociados al médico
             Audio::where('doctor', $doctor)->delete();
+
+            // Se borra todo el contenido del directorio del usuario asociado
+            Storage::disk('local')->deleteDirectory($doctor);
+
             return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
@@ -231,6 +235,7 @@ class AudiosController extends Controller
                 // en su carpeta entonces el acceso está permitido
                 Storage::disk('local')->delete($doctor . '/' . $audio['localpath']);
 
+                // Número de audios que tienen el mismo código de paciente (tag)
                 $n_audios = Audio::where([
                     ['tag', '=', $audio['tag']],
                     ['doctor', '=', $doctor]
