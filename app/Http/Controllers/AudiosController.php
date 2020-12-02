@@ -85,7 +85,7 @@ class AudiosController extends Controller
                 ['name', 'LIKE', '%'.$name.'%']
             ])
             ->orderBy('id', 'desc')
-            ->get();
+            ->simplePaginate(10);
 
             return response()->json($data, 200);
         } else {
