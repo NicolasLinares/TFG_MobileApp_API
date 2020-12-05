@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Carbon\Carbon;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
