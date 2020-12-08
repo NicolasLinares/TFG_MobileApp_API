@@ -103,7 +103,7 @@ class AudiosController extends Controller
             // Se borra todo el contenido del directorio del usuario asociado
             Storage::disk('local')->deleteDirectory($doctor);
 
-            return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 201);
+            return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
