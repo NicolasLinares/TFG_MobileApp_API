@@ -80,8 +80,8 @@ class UsersController extends Controller
         }
     }
 
-    // Update speciality
-    function updateSpeciality(Request $request) {
+    // Update specialty
+    function updatespecialty(Request $request) {
         if ($request->isJson()) {
 
             $data = $request->json()->all();
@@ -89,7 +89,7 @@ class UsersController extends Controller
             $user = User::where('email', $data['email'])->first();
 
             if($user) {
-                $user->speciality = $data['speciality'];
+                $user->specialty = $data['specialty'];
                 $user->save();
             }
             return response()->json([$user], 200);

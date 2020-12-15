@@ -23,9 +23,9 @@ class CreateUserTable extends Migration
             $table->string('name', 60)->index('name')->comment('Nombre del médico');
             $table->string('surnames', 60)->index('surnames')->comment('Apellidos del médico');
             $table->string('country', 60)->index('country')->comment('País donde trabaja el médico');
-            $table->string('speciality', 60)->index('speciality')->comment('Especialidad médica');
+            $table->string('specialty', 60)->index('specialty')->comment('Especialidad médica');
             $table->char('api_token', 60)->index('api_token')->nullable();
-            $table->index(['name', 'surnames', 'email', 'country', 'speciality', 'api_token']);
+            $table->index(['name', 'surnames', 'email', 'country', 'specialty', 'api_token']);
         });
     }
 

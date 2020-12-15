@@ -68,7 +68,7 @@ $router->group(['prefix' => 'v1'], function ($router) {
 
         $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
         $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
-        $router->put('user/speciality', ['uses' => 'UsersController@updateSpeciality']);
+        $router->put('user/specialty', ['uses' => 'UsersController@updatespecialty']);
 
         // AUDIO OPS
         $router->get('audios', ['uses' => 'AudiosController@getAll']);
