@@ -46,8 +46,6 @@ $router->get('rename/{directory}/{filename}', function ($directory, $filename) {
 
 
 
-
-
 $router->group(['prefix' => 'v1'], function ($router) {
     // LOGIN
     $router->post('/login',  ['uses' => 'AuthController@login']);
