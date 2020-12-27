@@ -186,11 +186,10 @@ class AudiosController extends Controller
             'doctor' => $doctor
         ]);
 
-        return response()->json([ 'base64' => base64_encode(file_get_contents($audiofile))], 201);
-
-        //return response()->json($audio, 201);
+        return response()->json($audio, 201);
     }
 
+    // base64_encode(file_get_contents($audiofile))
 
 
     function downloadAudioFile($uid, Request $request)
