@@ -95,14 +95,16 @@ class AuthController extends Controller
         if ($request->isJson()) {
             try {
 
-                
-                $response = Http::asForm()->post('https://sdk.invoxmedical.com/Transcript/v2.6/Token',
-                [
+                $API_INVOXMD_URL = env('API_INVOXMD_URL');
+                $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
+                $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+
+                $response = Http::asForm()->post($API_INVOXMD_URL.'/Transcript/v2.6/Token',
+                    [
                         'grant_type' => 'password',
-                        'username' => 'INVOXMD',
-                        'password' => '139f900a2a207b869677a50052db5e6a',
-                    
-                ]);
+                        'username' => $API_INVOXMD_USERNAME,
+                        'password' => $API_INVOXMD_PASSWORD
+                    ]);
                 
                 return response()->json($response->body(), 200);
 
