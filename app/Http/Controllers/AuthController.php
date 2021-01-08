@@ -105,10 +105,6 @@ class AuthController extends Controller
                     return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
 
-                $user = config('API_INVOXMD_USERNAME');
-
-                return response()->json(['user' => $user ], 401);
-
 
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
