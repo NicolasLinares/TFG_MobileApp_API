@@ -107,7 +107,7 @@ class AuthController extends Controller
                     ]);
                 $body = $response->body();
 
-                return response()->json($body['access_token'], 200);
+                return response()->json($body->access_token, 200);
 
 
 
