@@ -105,8 +105,9 @@ class AuthController extends Controller
                         'username' => $API_INVOXMD_USERNAME,
                         'password' => $API_INVOXMD_PASSWORD
                     ]);
+                $body = $response->json();
 
-                return response()->json($response->json(), 200);
+                return response()->json($body['access_token'], 200);
 
 
 
