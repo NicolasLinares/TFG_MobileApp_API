@@ -8,6 +8,8 @@ use Tymon\JWTAuth\JWTAuth;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+
 use Illuminate\Support\Str;
 use App\Models\User;
 use Exception;
@@ -92,6 +94,15 @@ class AuthController extends Controller
     {
         if ($request->isJson()) {
             try {
+
+
+                $response = Http::withBasicAuth('INVOXMD', '139f900a2a207b869677a50052db5e6a')->post('https://sdk.invoxmedical.com/Transcript/v2.6/Token');
+
+                
+                return response()->json($response, 200);
+
+
+
 
                 $credentials = $request->only('email', 'password');
 

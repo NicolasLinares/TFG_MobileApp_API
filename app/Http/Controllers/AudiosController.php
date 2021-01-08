@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Controller;
 
@@ -189,7 +190,7 @@ class AudiosController extends Controller
 
 
         // coger token
-
+        
 
         // mandar el audio
 
