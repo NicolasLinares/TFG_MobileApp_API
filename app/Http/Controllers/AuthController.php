@@ -105,7 +105,7 @@ class AuthController extends Controller
                     ]
                 ]);
                 
-                return response()->json($response->getBody(), 200);
+                return response()->json($response, 200);
 
 
 
