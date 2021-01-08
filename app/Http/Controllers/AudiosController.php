@@ -126,6 +126,24 @@ class AudiosController extends Controller
         }
     }
 
+
+    private function getTokenINVOXMD() {
+        $API_INVOXMD_URL = env('API_INVOXMD_URL');
+        $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
+        $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+
+        $response = Http::asForm()->post($API_INVOXMD_URL.'/Transcript/v2.6/Token',
+            [
+                'grant_type' => 'password',
+                'username' => $API_INVOXMD_USERNAME,
+                'password' => $API_INVOXMD_PASSWORD
+            ]);
+
+        $body = $response->body();
+
+        return $body['access_token'];
+    }
+
     /**
      * Store a new audio.
      *
@@ -152,6 +170,14 @@ class AudiosController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Los datos del audio no son válidos.'], 422);
         }
+
+
+
+        // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+        // -----------------------------------------------------------------
+
+        $INVOXMD_token = $this->getTokenINVOXMD();
+
 
 
         // FILESYSTEM
