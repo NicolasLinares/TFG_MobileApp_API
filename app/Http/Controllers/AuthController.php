@@ -95,11 +95,17 @@ class AuthController extends Controller
         if ($request->isJson()) {
             try {
 
-
-                $response = Http::withBasicAuth('INVOXMD', '139f900a2a207b869677a50052db5e6a')->post('https://sdk.invoxmedical.com/Transcript/v2.6/Token');
-
                 
-                return response()->json($response, 200);
+                $response = Http::post('https://sdk.invoxmedical.com/Transcript/v2.6/Token',
+                [
+                    'form_params' => [
+                        'grant_type' => 'password',
+                        'username' => 'INVOXMD',
+                        'password' => '139f900a2a207b869677a50052db5e6a',
+                    ]
+                ]);
+                
+                return response()->json($response->getBody(), 200);
 
 
 
