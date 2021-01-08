@@ -96,13 +96,12 @@ class AuthController extends Controller
             try {
 
                 
-                $response = Http::post('https://sdk.invoxmedical.com/Transcript/v2.6/Token',
+                $response = Http::asForm()->post('https://sdk.invoxmedical.com/Transcript/v2.6/Token',
                 [
-                    'form_params' => [
                         'grant_type' => 'password',
                         'username' => 'INVOXMD',
                         'password' => '139f900a2a207b869677a50052db5e6a',
-                    ]
+                    
                 ]);
                 
                 return response()->json($response->body(), 200);
