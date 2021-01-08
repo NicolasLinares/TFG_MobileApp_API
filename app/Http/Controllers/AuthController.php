@@ -92,6 +92,9 @@ class AuthController extends Controller
     {
         if ($request->isJson()) {
             try {
+                
+                return response()->json(['user' => config('API_INVOXMD_USERNAME') ], 401);
+
 
                 $credentials = $request->only('email', 'password');
 

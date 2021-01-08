@@ -139,6 +139,7 @@ class AudiosController extends Controller
         // con true convierte a array
         $data = json_decode($body['data'], true); // información del audio (name, extension, patient code, localpath...)
 
+
         // Se comprueba que los campos cumplen el formato
         $validator = Validator::make($data, [
             'name' => 'required',
@@ -186,11 +187,17 @@ class AudiosController extends Controller
             'doctor' => $doctor
         ]);
 
+
+        // coger token
+
+
+        // mandar el audio
+
         return response()->json($audio, 201);
     }
 
     // base64_encode(file_get_contents($audiofile))
-
+    
 
     function downloadAudioFile($uid, Request $request)
     {
