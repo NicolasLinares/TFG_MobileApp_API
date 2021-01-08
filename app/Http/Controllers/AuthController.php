@@ -92,9 +92,6 @@ class AuthController extends Controller
     {
         if ($request->isJson()) {
             try {
-                
-                return response()->json(['user' => config('API_INVOXMD_USERNAME') ], 401);
-
 
                 $credentials = $request->only('email', 'password');
 
@@ -107,6 +104,11 @@ class AuthController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
+
+                $user = config('API_INVOXMD_USERNAME');
+
+                return response()->json(['user' => $user ], 401);
+
 
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
