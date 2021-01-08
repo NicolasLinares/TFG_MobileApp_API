@@ -139,10 +139,24 @@ class AudiosController extends Controller
                 'password' => $API_INVOXMD_PASSWORD
             ]);
 
-        $body = $response->body();
+        $body = $response->json();
 
         return $body['access_token'];
     }
+
+    private function postAudioINVOXMD($token, $audiofile, $fileName) {
+        $API_INVOXMD_URL = env('API_INVOXMD_URL');
+
+        $response = Http::asForm()->withToken($token)->post($API_INVOXMD_URL.'/Transcript/v2.6/Transcript?username=nicolasenrique01',
+            [
+                'Format' => 'WAV',
+                'Data' => base64_encode(file_get_contents($audiofile)),
+                'FileName' => $fileName
+            ]);
+
+        return $response->json();
+    }
+
 
     /**
      * Store a new audio.
@@ -178,12 +192,13 @@ class AudiosController extends Controller
 
         $INVOXMD_token = $this->getTokenINVOXMD();
 
+        $audiofile = $body['file']; // archivo de audio
 
+        $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
+        
 
         // FILESYSTEM
         // -----------------------------------------------------------------
-
-        $audiofile = $body['file']; // archivo de audio
 
         $doctor = Auth::id();
 
@@ -223,7 +238,6 @@ class AudiosController extends Controller
         return response()->json($audio, 201);
     }
 
-    // base64_encode(file_get_contents($audiofile))
     
 
     function downloadAudioFile($uid, Request $request)

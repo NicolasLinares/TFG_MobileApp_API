@@ -94,24 +94,7 @@ class AuthController extends Controller
     {
         if ($request->isJson()) {
             try {
-
-                $API_INVOXMD_URL = env('API_INVOXMD_URL');
-                $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
-                $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
-
-                $response = Http::asForm()->post($API_INVOXMD_URL.'/Transcript/v2.6/Token',
-                    [
-                        'grant_type' => 'password',
-                        'username' => $API_INVOXMD_USERNAME,
-                        'password' => $API_INVOXMD_PASSWORD
-                    ]);
-                $body = $response->json();
-
-                return response()->json($body['access_token'], 200);
-
-
-
-
+                
                 $credentials = $request->only('email', 'password');
 
                 // Se comprueba que los campos cumplen el formato
