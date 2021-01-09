@@ -248,6 +248,7 @@ class AudiosController extends Controller
 
             $info = $response['Info'];
             
+            /*
             Transcript::create([
                 'uid' => $uid_transcript,
                 'filename' => $info['FileName'],
@@ -258,9 +259,21 @@ class AudiosController extends Controller
                 'text' => $info['Text'],
                 'id_audio' => $audio['id']
             ]);
+            */
+
+            Transcript::create([
+                'uid' => $uid_transcript,
+                'filename' => $info['FileName'],
+                'status' => null,
+                'progress' => null,
+                'start_date' => null,
+                'end_date' => null ,
+                'text' => null,
+                'id_audio' => $audio['id']
+            ]);
             
         } catch (Exception $e) {
-            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos' ], 500);
+            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos '.$e ], 500);
         }
 
 
