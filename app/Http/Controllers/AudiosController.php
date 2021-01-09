@@ -237,7 +237,7 @@ class AudiosController extends Controller
             // Se obtiene el token de autorización
             $INVOXMD_token = $this->getTokenINVOXMD();
             // Se envía el audio
-            $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
+            $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $audio->id);
             
             // Se guarda la información en la base de datos
             $uid_transcript = Str::random(32);
@@ -247,24 +247,10 @@ class AudiosController extends Controller
             }
 
             $info = $response['Info'];
-            
-            /*
-            Transcript::create([
-                'uid' => $uid_transcript,
-                'filename' => $info['FileName'],
-                'status' => $info['Status'],
-                'progress' => strval($info['Progress']),
-                'start_date' => strtotime($info['StartDate']),
-                'end_date' => null ,
-                'text' => $info['Text'],
-                'id_audio' => $audio['id']
-            ]);
-            */
 
             Transcript::create([
                 'id' => $info['Id'],
                 'uid' => $uid_transcript,
-                'filename' => $info['FileName'],
                 'status' => $info['Status'],
                 'progress' => strval($info['Progress']),
                 'start_date' => strtotime($info['StartDate']),
@@ -276,7 +262,6 @@ class AudiosController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos '.$e ], 500);
         }
-
 
         return response()->json($audio, 201);
     }
