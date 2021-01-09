@@ -236,8 +236,8 @@ class AudiosController extends Controller
         // Se guarda la información en la base de datos
         $uid_transcript = Str::random(32);
         // Evitamos que se cree un número random igual, debe ser único
-        if (Audio::where('uid', $uid_transcript)->exists()) {
-            $uid = Str::random(32);
+        if (Transcript::where('uid', $uid_transcript)->exists()) {
+            $uid_transcript = Str::random(32);
         }
 
         $audio = Transcript::create([
