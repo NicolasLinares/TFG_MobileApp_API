@@ -262,6 +262,7 @@ class AudiosController extends Controller
             */
 
             Transcript::create([
+                'id' => $info['Id'],
                 'uid' => $uid_transcript,
                 'filename' => $info['FileName'],
                 'status' => null,
