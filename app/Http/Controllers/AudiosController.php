@@ -143,7 +143,7 @@ class AudiosController extends Controller
                 ->get();;
             
             $transcript = Transcript::select('text')
-                ->where('id', "122")
+                ->where('id_audio', '701')
                 ->get();
 
             return response()->json($transcript, 200);
