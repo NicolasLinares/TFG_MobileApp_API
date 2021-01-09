@@ -135,14 +135,18 @@ class AudiosController extends Controller
 
         if ($request->isJson()) {
             $doctor = Auth::id();
-            $transcript = Audio::select('id')
+            $id_audio = Audio::select('id')
                 ->where([
                     ['doctor', '=', $doctor],
                     ['uid', '=', $uid]
-                ])->get();
+                ])
+                ->get();;
             
-            return response()->json($transcript, 200);
+            $transcript = Transcript::select('text')
+                ->where('id_audio', $id_audio)
+                ->get();
 
+            return response()->json($transcript, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
