@@ -155,7 +155,6 @@ class AudiosController extends Controller
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
 
-                try {
                     // Se obtiene el token de autorización
                     $INVOXMD_token = $this->getTokenINVOXMD();
 
@@ -171,13 +170,6 @@ class AudiosController extends Controller
                     $transcript->save();
 
                     return response()->json($transcript, 200);
-
-
-                } catch (Exception $e) {
-                    return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos '.$e ], 500);
-                }
-
-                return response()->json($audio, 201);
 
             }
             
