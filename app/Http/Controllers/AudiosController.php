@@ -130,53 +130,7 @@ class AudiosController extends Controller
     }
 
 
-    function getTranscript($uid, Request $request)
-    {
 
-        if ($request->isJson()) {
-            $doctor = Auth::id();
-            $id_audio = Audio::select('id')
-                ->where([
-                    ['doctor', '=', $doctor],
-                    ['uid', '=', $uid]
-                ])
-                ->first();
-            
-            $transcript = Transcript::where('id_audio', $id_audio['id'])
-                ->first();
-
-
-
-            if ($transcript['status'] === 'Completada') {
-                return response()->json($transcript, 200);
-            } 
-            else {
-            
-                // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
-                // -----------------------------------------------------------------
-
-                    // Se obtiene el token de autorización
-                    $INVOXMD_token = $this->getTokenINVOXMD();
-
-                    // Se envía el audio
-                    $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
-                    
-                    $info = $response['Info'];
-
-                    $transcript->status = $info['Status'];
-                    $transcript->progress = strval($info['Progress']);
-                    $transcript->end_date = $info['EndDate'];
-                    $transcript->transcript = $response['Text'];
-                    $transcript->save();
-
-                    return response()->json($transcript, 200);
-
-            }
-            
-        } else {
-            return response()->json(['error' => 'Usuario no autorizado.'], 401);
-        }
-    }
 
 
     private function getTokenINVOXMD() {
@@ -215,6 +169,51 @@ class AudiosController extends Controller
         $response = Http::withToken($token)->get($API_INVOXMD_URL);
 
         return $response->json();
+    }
+    
+
+    function getTranscript($uid, Request $request)
+    {
+
+        if ($request->isJson()) {
+            $doctor = Auth::id();
+            $id_audio = Audio::select('id')
+                ->where([
+                    ['doctor', '=', $doctor],
+                    ['uid', '=', $uid]
+                ])
+                ->first();
+            
+            $transcript = Transcript::where('id_audio', $id_audio['id'])->first();
+
+
+            if ($transcript['status'] !== 'Completada') {
+            
+                    // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+                    // -----------------------------------------------------------------
+
+                    // Se obtiene el token de autorización
+                    $INVOXMD_token = $this->getTokenINVOXMD();
+
+                    // Se envía el audio
+                    $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
+                    
+                    $info = $response['Info'];
+
+                    $transcript->status = $info['Status'];
+                    $transcript->progress = strval($info['Progress']);
+                    $transcript->end_date = $info['EndDate'];
+                    $transcript->transcript = $response['Text'];
+                    $transcript->save();
+
+                    return response()->json($transcript, 200);
+            }
+
+            return response()->json($transcript, 200);
+            
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+        }
     }
 
     /**
