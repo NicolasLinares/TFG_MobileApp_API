@@ -143,7 +143,7 @@ class AudiosController extends Controller
                 ->get();;
             
 
-            return response()->json(strval($id_audio['id']), 200);
+            return response()->json($id_audio->id, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
