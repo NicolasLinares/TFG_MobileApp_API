@@ -59,7 +59,7 @@ class AuthController extends Controller
 
                     $uid = Str::random(32);
                     // evitamos que se cree un número random igual, debe ser un único
-                    while(User::where('uid',$uid)->exists()) {
+                    while(User::where('uid', $uid)->exists()) {
                         $uid = Str::random(32);
                     }
 
@@ -75,7 +75,7 @@ class AuthController extends Controller
 
                     return response()->json(['message' =>'Usuario creado correctamente'], 201);
                 } catch (Exception $e) {
-                    return response()->json(['error' => 'Ha ocurrido un problema en el registro' ], 500);
+                    return response()->json(['error' => 'Ha ocurrido un problema en el registro '.$e ], 500);
                 }
             } else {
                 return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email' ], 400);
@@ -107,16 +107,16 @@ class AuthController extends Controller
                     return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
 
-
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
                 }
+                
                 
                 // Éxito - Login correcto
                 return $this->respondWithToken($token);
 
             } catch (Exception $e) {
-                return response()->json(['error' => 'Usuario no autorizado' ], 401);
+                return response()->json(['error' => 'Usuario no autorizado '], 401);
             }
         } else {
             return response()->json(['error' => 'El formato no es válido' ], 400);

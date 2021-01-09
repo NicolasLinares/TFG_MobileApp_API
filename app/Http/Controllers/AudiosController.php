@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audio;
+use App\Models\Transcript;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -187,30 +189,13 @@ class AudiosController extends Controller
 
 
 
-        // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
-        // -----------------------------------------------------------------
-
-        // Se obtiene el token de autorización
-        $INVOXMD_token = $this->getTokenINVOXMD();
-        // Se envía el audio
-        $audiofile = $body['file']; // archivo de audio
-        $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
-        
-        // Se guarda la información en la base de datos
-
-
-
-
-
-
-
-        
 
         // FILESYSTEM
         // -----------------------------------------------------------------
 
         $doctor = Auth::id();
 
+        $audiofile = $body['file']; // archivo de audio
         $directory_name = $doctor; // user id
 
         Storage::disk('local')->put($directory_name . '/' . $data['localpath'], file_get_contents($audiofile));
@@ -220,14 +205,14 @@ class AudiosController extends Controller
 
         // BASE DE DATOS
         // -----------------------------------------------------------------
-        $uid = Str::random(32);
+        $uid_audio = Str::random(32);
         // Evitamos que se cree un número random igual, debe ser único
-        if (Audio::where('uid', $uid)->exists()) {
-            $uid = Str::random(32);
+        if (Audio::where('uid', $uid_audio)->exists()) {
+            $uid_audio = Str::random(32);
         }
 
         $audio = Audio::create([
-            'uid' => $uid,
+            'uid' => $uid_audio,
             'name' => $data['name'],
             'extension' => $data['extension'],
             'localpath' => $data['localpath'],
@@ -238,9 +223,34 @@ class AudiosController extends Controller
             'doctor' => $doctor
         ]);
 
-
-        // coger token
         
+        // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+        // -----------------------------------------------------------------
+
+        // Se obtiene el token de autorización
+        $INVOXMD_token = $this->getTokenINVOXMD();
+        // Se envía el audio
+        $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
+        
+
+        // Se guarda la información en la base de datos
+        $uid_transcript = Str::random(32);
+        // Evitamos que se cree un número random igual, debe ser único
+        if (Audio::where('uid', $uid_transcript)->exists()) {
+            $uid = Str::random(32);
+        }
+
+        $audio = Transcript::create([
+            'id' => $response['Id'],
+            'uid' => $uid_transcript,
+            'filename' => $response['FileName'],
+            'status' => $response['Status'],
+            'progress' => $response['Progress'],
+            'start_date' => $response['StartDate'],
+            'end_date' => $response['EndDate'],
+            'text' => $response['Text'],
+        ]);
+
 
         // mandar el audio
 
