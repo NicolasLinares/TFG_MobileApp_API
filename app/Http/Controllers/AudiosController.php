@@ -265,7 +265,7 @@ class AudiosController extends Controller
         }
 
 
-        return response()->json($info['filename'], 201);
+        return response()->json($info['FileName'], 201);
     }
 
     
