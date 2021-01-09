@@ -75,7 +75,7 @@ class AuthController extends Controller
 
                     return response()->json(['message' =>'Usuario creado correctamente'], 201);
                 } catch (Exception $e) {
-                    return response()->json(['error' => 'Ha ocurrido un problema en el registro '.$e ], 500);
+                    return response()->json(['error' => 'Ha ocurrido un problema en el registro ' ], 500);
                 }
             } else {
                 return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email' ], 400);
@@ -110,7 +110,7 @@ class AuthController extends Controller
                 if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
                 }
-                
+
                 
                 // Éxito - Login correcto
                 return $this->respondWithToken($token);

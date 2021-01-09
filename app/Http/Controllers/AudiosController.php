@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\Controller;
+use Exception;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
@@ -188,8 +189,6 @@ class AudiosController extends Controller
         }
 
 
-
-
         // FILESYSTEM
         // -----------------------------------------------------------------
 
@@ -203,53 +202,65 @@ class AudiosController extends Controller
         // url para acceder al audio desde la aplicación
         $url = $request->url() . '/' . $directory_name . '/' . $data['localpath'];
 
+
+
         // BASE DE DATOS
         // -----------------------------------------------------------------
-        $uid_audio = Str::random(32);
-        // Evitamos que se cree un número random igual, debe ser único
-        if (Audio::where('uid', $uid_audio)->exists()) {
+
+        try {
             $uid_audio = Str::random(32);
+            // Evitamos que se cree un número random igual, debe ser único
+            if (Audio::where('uid', $uid_audio)->exists()) {
+                $uid_audio = Str::random(32);
+            }
+
+            $audio = Audio::create([
+                'uid' => $uid_audio,
+                'name' => $data['name'],
+                'extension' => $data['extension'],
+                'localpath' => $data['localpath'],
+                'url' => $url,
+                'tag' => $data['tag'],
+                'description' => $data['description'] != "" ? $data['description'] : null,
+                'doctor' => $doctor
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Ha ocurrido un problema al registrar la nota de voz en la base de datos' ], 500);
         }
 
-        $audio = Audio::create([
-            'uid' => $uid_audio,
-            'name' => $data['name'],
-            'extension' => $data['extension'],
-            'localpath' => $data['localpath'],
-            'url' => $url,
-            'tag' => $data['tag'],
-            'description' => $data['description'] != "" ? $data['description'] : null,
-            'doctor' => $doctor
-        ]);
-
-        
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
-        // Se obtiene el token de autorización
-        $INVOXMD_token = $this->getTokenINVOXMD();
-        // Se envía el audio
-        $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
-        
 
-        // Se guarda la información en la base de datos
-        $uid_transcript = Str::random(32);
-        // Evitamos que se cree un número random igual, debe ser único
-        if (Transcript::where('uid', $uid_transcript)->exists()) {
+        try{
+            // Se obtiene el token de autorización
+            $INVOXMD_token = $this->getTokenINVOXMD();
+            // Se envía el audio
+            $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
+            
+            // Se guarda la información en la base de datos
             $uid_transcript = Str::random(32);
+            // Evitamos que se cree un número random igual, debe ser único
+            if (Transcript::where('uid', $uid_transcript)->exists()) {
+                $uid_transcript = Str::random(32);
+            }
+    
+            $info = $response['Info'];
+            Transcript::create([
+                'id' => $info->Id,
+                'uid' => $uid_transcript,
+                'filename' => $info->FileName,
+                'status' => $info->Status,
+                'progress' => "0",
+                'start_date' => null,
+                'end_date' => null,
+                'text' => $response->Text,
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos' ], 500);
         }
-        
-        $info = $response['Info'];
-        Transcript::create([
-            'id' => $info['Id'],
-            'uid' => $uid_transcript,
-            'filename' => $info['FileName'],
-            'status' => $info['Status'],
-            'progress' => "0",
-            'start_date' => $info['StartDate'],
-            'end_date' => $info['EndDate'] != "null" ? $info['EndDate'] : null,
-            'text' => $response['Text'],
-        ]);
 
 
         return response()->json($audio, 201);
