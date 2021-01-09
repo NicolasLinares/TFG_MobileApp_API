@@ -202,8 +202,13 @@ class AudiosController extends Controller
                 
                 $info = $response['Info'];
 
+                $transcript->status = $info['Status'];
+                $transcript->progress = strval($info['Progress']);
+                $transcript->end_date = $info['EndDate'];
+                $transcript->text = $response['Text'];
+                $transcript->save();
 
-                return response()->json($info, 200);
+                return response()->json($transcript, 200);
             }
 
             return response()->json($transcript, 200);
