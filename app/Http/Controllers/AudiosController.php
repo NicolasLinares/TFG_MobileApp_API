@@ -269,7 +269,7 @@ class AudiosController extends Controller
                 'start_date' => null,
                 'end_date' => null ,
                 'text' => null,
-                'id_audio' => $audio['id']
+                'id_audio' => $audio->id
             ]);
             
         } catch (Exception $e) {
