@@ -269,7 +269,7 @@ class AudiosController extends Controller
                 'progress' => strval($info['Progress']),
                 'start_date' => strtotime($info['StartDate']),
                 'end_date' => null,
-                'text' => $info['Text'],
+                'text' => $response['Text'],
                 'id_audio' => $audio->id
             ]);
             
