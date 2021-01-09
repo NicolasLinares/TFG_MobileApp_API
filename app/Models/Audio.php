@@ -32,7 +32,7 @@ class Audio extends Model
      * @var array
      */
     protected $hidden = [
-        'id','doctor'
+        'doctor'
     ];
 
 }

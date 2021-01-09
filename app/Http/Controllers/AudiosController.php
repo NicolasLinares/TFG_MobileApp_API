@@ -247,25 +247,25 @@ class AudiosController extends Controller
             }
 
             $info = $response['Info'];
-            /*
+            
             Transcript::create([
                 'id' => $info->Id,
                 'uid' => $uid_transcript,
-                'filename' => $info->FileName,
-                'status' => $info->Status,
-                'progress' => "0",
-                'start_date' => null,
-                'end_date' => null,
-                'text' => $response->Text,
-                ''
+                'filename' => $info['FileName'],
+                'status' => $info['Status'],
+                'progress' => strval($info['Progress']),
+                'start_date' => strtotime($info['StartDate']),
+                'end_date' => null ,
+                'text' => $info['Text'],
+                'id_audio' => $audio['id']
             ]);
-            */
+            
         } catch (Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos' ], 500);
         }
 
 
-        return response()->json($info['FileName'], 201);
+        return response()->json($audio, 201);
     }
 
     
