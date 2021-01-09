@@ -139,7 +139,7 @@ class AudiosController extends Controller
                 ->where([
                     ['doctor', '=', $doctor],
                     ['uid', '=', $uid]
-                ]);
+                ])->get();
             
             return response()->json($transcript, 200);
 
