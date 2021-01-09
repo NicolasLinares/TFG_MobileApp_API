@@ -205,9 +205,9 @@ class AudiosController extends Controller
     }
 
     private function postAudioINVOXMD($token, $audiofile, $fileName) {
-        $API_INVOXMD_URL = env('API_INVOXMD_URL');
+        $API_INVOXMD_URL = env('API_INVOXMD_URL').'/Transcript/v2.6/Transcript?username=nicolasenrique01';
 
-        $response = Http::asForm()->withToken($token)->post($API_INVOXMD_URL.'/Transcript/v2.6/Transcript?username=nicolasenrique01',
+        $response = Http::asForm()->withToken($token)->post($API_INVOXMD_URL,
             [
                 'Format' => 'WAV',
                 'Data' => base64_encode(file_get_contents($audiofile)),
@@ -217,6 +217,13 @@ class AudiosController extends Controller
         return $response->json();
     }
 
+    private function getTranscriptINVOXMD($token, $id) {
+        $API_INVOXMD_URL = env('API_INVOXMD_URL').'/Transcript/v2.6/Transcript/'.$id.'?username=nicolasenrique01';
+
+        $response = Http::withToken($token)->get($API_INVOXMD_URL);
+
+        return $response->json();
+    }
 
     /**
      * Store a new audio.
