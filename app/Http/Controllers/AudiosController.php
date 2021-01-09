@@ -189,6 +189,8 @@ class AudiosController extends Controller
 
             if ($transcript['status'] !== 'Completada') {
             
+                    return response()->json($transcript, 200);
+
                     // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                     // -----------------------------------------------------------------
 
