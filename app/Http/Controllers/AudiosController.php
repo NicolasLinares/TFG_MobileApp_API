@@ -151,7 +151,7 @@ class AudiosController extends Controller
     }
 
     private function postAudioINVOXMD($token, $audiofile, $fileName) {
-        $API_INVOXMD_URL = env('API_INVOXMD_URL').'/Transcript/v2.6/Transcript?username=nicolasenrique01';
+        $API_INVOXMD_URL = env('API_INVOXMD_URL').'Transcript/v2.6/Transcript?username=nicolasenrique01';
 
         $response = Http::asForm()->withToken($token)->post($API_INVOXMD_URL,
             [
@@ -164,7 +164,7 @@ class AudiosController extends Controller
     }
 
     private function getTranscriptINVOXMD($token, $id) {
-        $API_INVOXMD_URL = env('API_INVOXMD_URL').'/Transcript/v2.6/Transcript/'.$id.'?username=nicolasenrique01';
+        $API_INVOXMD_URL = env('API_INVOXMD_URL').'Transcript/v2.6/Transcript/'.$id.'?username=nicolasenrique01';
 
         $response = Http::withToken($token)->get($API_INVOXMD_URL);
 
@@ -189,26 +189,27 @@ class AudiosController extends Controller
 
             if ($transcript['status'] !== 'Completada') {
             
-                    return response()->json($transcript, 200);
 
-                    // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
-                    // -----------------------------------------------------------------
+                return response()->json($transcript, 200);
 
-                    // Se obtiene el token de autorización
-                    $INVOXMD_token = $this->getTokenINVOXMD();
+                // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+                // -----------------------------------------------------------------
 
-                    // Se envía el audio
-                    $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
-                    
-                    $info = $response['Info'];
+                // Se obtiene el token de autorización
+                $INVOXMD_token = $this->getTokenINVOXMD();
 
-                    $transcript->status = $info['Status'];
-                    $transcript->progress = strval($info['Progress']);
-                    $transcript->end_date = $info['EndDate'];
-                    $transcript->transcript = $response['Text'];
-                    $transcript->save();
+                // Se envía el audio
+                $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
+                
+                $info = $response['Info'];
 
-                    return response()->json($transcript, 200);
+                $transcript->status = $info['Status'];
+                $transcript->progress = strval($info['Progress']);
+                $transcript->end_date = $info['EndDate'];
+                $transcript->transcript = $response['Text'];
+                $transcript->save();
+
+                return response()->json($transcript, 200);
             }
 
             return response()->json($transcript, 200);
