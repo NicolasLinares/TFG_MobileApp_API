@@ -189,9 +189,7 @@ class AudiosController extends Controller
 
             if ($transcript['status'] !== 'Completada') {
             
-                $API_INVOXMD_URL = env('API_INVOXMD_URL').'Transcript/v2.6/Transcript/'.$transcript['id'].'?username=nicolasenrique01';
 
-                return response()->json($API_INVOXMD_URL, 200);
 
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
@@ -204,13 +202,8 @@ class AudiosController extends Controller
                 
                 $info = $response['Info'];
 
-                $transcript->status = $info['Status'];
-                $transcript->progress = strval($info['Progress']);
-                $transcript->end_date = $info['EndDate'];
-                $transcript->transcript = $response['Text'];
-                $transcript->save();
 
-                return response()->json($transcript, 200);
+                return response()->json($info, 200);
             }
 
             return response()->json($transcript, 200);
