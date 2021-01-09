@@ -240,7 +240,7 @@ class AudiosController extends Controller
             $uid_transcript = Str::random(32);
         }
 
-        $audio = Transcript::create([
+        Transcript::create([
             'id' => $response['Id'],
             'uid' => $uid_transcript,
             'filename' => $response['FileName'],
