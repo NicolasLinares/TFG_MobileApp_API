@@ -143,10 +143,10 @@ class AudiosController extends Controller
                 ->get();;
             
             $transcript = Transcript::select('text')
-                ->where('id_audio', $id_audio)
+                ->where('id_audio', $id_audio['id'])
                 ->get();
 
-            return response()->json($id_audio, 200);
+            return response()->json($transcript, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
