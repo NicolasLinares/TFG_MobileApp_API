@@ -245,9 +245,9 @@ class AudiosController extends Controller
             'uid' => $uid_transcript,
             'filename' => $info['FileName'],
             'status' => $info['Status'],
-            'progress' => $info['Progress'],
+            'progress' => "0",
             'start_date' => $info['StartDate'],
-            'end_date' => $info['EndDate'],
+            'end_date' => $info['EndDate'] != "null" ? $info['EndDate'] : null,
             'text' => $response['Text'],
         ]);
 
