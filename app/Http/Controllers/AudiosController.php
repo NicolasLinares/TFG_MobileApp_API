@@ -140,8 +140,9 @@ class AudiosController extends Controller
                     ['doctor', '=', $doctor],
                     ['uid', '=', $uid]
                 ])
-                ->get();;
+                ->first();
             
+
 
             return response()->json($id_audio, 200);
         } else {
