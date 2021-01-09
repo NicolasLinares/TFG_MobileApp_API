@@ -190,11 +190,20 @@ class AudiosController extends Controller
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
+        // Se obtiene el token de autorización
         $INVOXMD_token = $this->getTokenINVOXMD();
-
+        // Se envía el audio
         $audiofile = $body['file']; // archivo de audio
-
         $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $data['name']);
+        
+        // Se guarda la información en la base de datos
+
+
+
+
+
+
+
         
 
         // FILESYSTEM
