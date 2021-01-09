@@ -238,20 +238,19 @@ class AudiosController extends Controller
         if (Transcript::where('uid', $uid_transcript)->exists()) {
             $uid_transcript = Str::random(32);
         }
-
+        
+        $info = $response['Info'];
         Transcript::create([
-            'id' => $response['Id'],
+            'id' => $info['Id'],
             'uid' => $uid_transcript,
-            'filename' => $response['FileName'],
-            'status' => $response['Status'],
-            'progress' => $response['Progress'],
-            'start_date' => $response['StartDate'],
-            'end_date' => $response['EndDate'],
+            'filename' => $info['FileName'],
+            'status' => $info['Status'],
+            'progress' => $info['Progress'],
+            'start_date' => $info['StartDate'],
+            'end_date' => $info['EndDate'],
             'text' => $response['Text'],
         ]);
 
-
-        // mandar el audio
 
         return response()->json($audio, 201);
     }
