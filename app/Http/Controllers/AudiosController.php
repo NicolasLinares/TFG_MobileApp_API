@@ -130,6 +130,27 @@ class AudiosController extends Controller
     }
 
 
+    function getTranscript($uid, Request $request)
+    {
+
+        if ($request->isJson()) {
+            $doctor = Auth::id();
+            $id_audio = Audio::select('id')
+                ->where([
+                    ['doctor', '=', $doctor],
+                    ['uid', '=', $uid]
+                ]);
+            
+            $transcript = Transcript::select('text')
+                ->where('id_audio', $id_audio);
+
+            return response()->json($transcript, 200);
+        } else {
+            return response()->json(['error' => 'Usuario no autorizado.'], 401);
+        }
+    }
+
+
     private function getTokenINVOXMD() {
         $API_INVOXMD_URL = env('API_INVOXMD_URL');
         $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
