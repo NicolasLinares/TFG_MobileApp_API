@@ -23,7 +23,7 @@ class Audio extends Model
      * @var array
      */
     protected $fillable = [
-        'uid', 'name', 'extension', 'url', 'localpath', 'tag', 'description', 'transcription', 'doctor'
+        'uid', 'name', 'extension', 'url', 'localpath', 'tag', 'description', 'doctor'
     ];
 
     /**

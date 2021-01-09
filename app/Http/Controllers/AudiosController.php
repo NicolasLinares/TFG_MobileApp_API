@@ -219,7 +219,6 @@ class AudiosController extends Controller
             'url' => $url,
             'tag' => $data['tag'],
             'description' => $data['description'] != "" ? $data['description'] : null,
-            'transcription' => null,
             'doctor' => $doctor
         ]);
 
