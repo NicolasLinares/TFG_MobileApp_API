@@ -142,11 +142,45 @@ class AudiosController extends Controller
                 ])
                 ->first();
             
-            $transcript = Transcript::select('text')
-                ->where('id_audio', $id_audio['id'])
+            $transcript = Transcript::where('id_audio', $id_audio['id'])
                 ->first();
 
-            return response()->json($transcript, 200);
+
+
+            if ($transcript['status'] === 'Completada') {
+                return response()->json($transcript, 200);
+            } 
+            else {
+            
+                // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+                // -----------------------------------------------------------------
+
+                try {
+                    // Se obtiene el token de autorización
+                    $INVOXMD_token = $this->getTokenINVOXMD();
+
+                    // Se envía el audio
+                    $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
+                    
+                    $info = $response['Info'];
+
+                    $transcript->status = $info['Status'];
+                    $transcript->progress = strval($info['Progress']);
+                    $transcript->end_date = $info['EndDate'];
+                    $transcript->transcript = $response['Text'];
+                    $transcript->save();
+
+                    return response()->json($transcript, 200);
+
+
+                } catch (Exception $e) {
+                    return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos '.$e ], 500);
+                }
+
+                return response()->json($audio, 201);
+
+            }
+            
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
