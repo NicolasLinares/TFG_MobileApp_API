@@ -249,7 +249,6 @@ class AudiosController extends Controller
             $info = $response['Info'];
             
             Transcript::create([
-                'id' => $info->Id,
                 'uid' => $uid_transcript,
                 'filename' => $info['FileName'],
                 'status' => $info['Status'],
