@@ -87,7 +87,6 @@ class TranscriptionController extends Controller
     {
         $token = $this->getTokenINVOXMD();
 
-
         $transcript = Transcript::where('id_audio', $id_audio)->first();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcript['id'] . '?username=nicolasenrique01';
