@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Audio;
 use App\Models\Transcript;
+use App\Http\Controllers\TranscriptionController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -190,15 +191,15 @@ class AudiosController extends Controller
             if ($transcript['status'] !== 'Completada') {
             
 
-
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
 
                 // Se obtiene el token de autorización
-                $INVOXMD_token = $this->getTokenINVOXMD();
+                $invoxmd_service = new TranscriptionController();
+                $INVOXMD_token = $invoxmd_service->getTokenINVOXMD();
 
                 // Se envía el audio
-                $response = $this->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
+                $response = $invoxmd_service->getTranscriptINVOXMD($INVOXMD_token, $transcript['id']);
                 
                 $info = $response['Info'];
 
@@ -292,9 +293,10 @@ class AudiosController extends Controller
 
         try{
             // Se obtiene el token de autorización
-            $INVOXMD_token = $this->getTokenINVOXMD();
+            $invoxmd_service = new TranscriptionController();
+            $INVOXMD_token = $invoxmd_service->getTokenINVOXMD();
             // Se envía el audio
-            $response = $this->postAudioINVOXMD($INVOXMD_token, $audiofile, $audio->id);
+            $response = $invoxmd_service->postAudioINVOXMD($INVOXMD_token, $audiofile, $audio->id);
             
             // Se guarda la información en la base de datos
             $uid_transcript = Str::random(32);
