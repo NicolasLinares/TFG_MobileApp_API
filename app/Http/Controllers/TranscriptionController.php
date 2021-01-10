@@ -10,6 +10,9 @@ use App\Models\Audio;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use App\Jobs\GetTranscriptFromINVOXMD;
+
+
 // Esta clase permite controlar todas las peticiones HTTP de INVOX MEDICAL
 class TranscriptionController extends Controller
 {
@@ -34,7 +37,7 @@ class TranscriptionController extends Controller
         return $body['access_token'];
     }
 
-    private function getTranscriptINVOXMD($id)
+    function getTranscriptINVOXMD($id)
     {
         $token = $this->getTokenINVOXMD();
 
@@ -80,6 +83,10 @@ class TranscriptionController extends Controller
             'text' => $response['Text'],
             'id_audio' => $id_audio
         ]);
+
+
+        $retrieveTranscript = new GetTranscriptFromINVOXMD($info['Id']);
+        $this->dispatch($retrieveTranscript)->delay(30);
     }
 
 
@@ -102,6 +109,7 @@ class TranscriptionController extends Controller
 
         if ($request->isJson()) {
             $doctor = Auth::id();
+            // Obtiene primero el id del audio asociado
             $id_audio = Audio::select('id')
                 ->where([
                     ['doctor', '=', $doctor],
@@ -109,12 +117,12 @@ class TranscriptionController extends Controller
                 ])
                 ->first();
             
+            // Obtiene la transcripción asociada al id del audio
             $transcript = Transcript::where('id_audio', $id_audio['id'])->first();
 
-
+            // Si no está completada se procede a recuperarla del servicio de transcripción
             if ($transcript['status'] !== 'Completada') {
             
-
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
 
