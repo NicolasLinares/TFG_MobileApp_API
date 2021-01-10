@@ -8,7 +8,7 @@ use Tymon\JWTAuth\JWTAuth;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -107,7 +107,7 @@ class AuthController extends Controller
                     return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
 
-                if (!$token = auth()->attempt($credentials)) {
+                if (!$token = Auth::guard('auth:api')->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
                 }
 
@@ -116,7 +116,7 @@ class AuthController extends Controller
                 return $this->respondWithToken($token);
 
             } catch (Exception $e) {
-                return response()->json(['error' => 'Usuario no autorizado '], 401);
+                return response()->json(['error' => 'Usuario no autorizado '. $e], 401);
             }
         } else {
             return response()->json(['error' => 'El formato no es válido' ], 400);

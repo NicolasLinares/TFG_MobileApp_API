@@ -29,7 +29,6 @@ class AudiosController extends Controller
             $doctor = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
-
             $data = Audio::where('doctor', $doctor)
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
@@ -37,7 +36,6 @@ class AudiosController extends Controller
 
             $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
-
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -51,13 +49,16 @@ class AudiosController extends Controller
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
-                ['doctor', '=', $doctor],
-                ['tag', '=', $tag]
-            ])
+                    ['doctor', '=', $doctor],
+                    ['tag', '=', $tag]
+                ])
                 ->orderBy('id', 'desc')
-                ->simplePaginate(10);
+                ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            return response()->json($data, 200);
+            $paginated = new Paginator($data, $data->count(), 10);
+            return response()->json($paginated->toArray(), 200);
+
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -75,9 +76,11 @@ class AudiosController extends Controller
                 ['name', 'LIKE', '%' . $name . '%']
             ])
                 ->orderBy('id', 'desc')
-                ->simplePaginate(10);
+                ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            return response()->json($data, 200);
+            $paginated = new Paginator($data, $data->count(), 10);
+            return response()->json($paginated->toArray(), 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -246,12 +249,11 @@ class AudiosController extends Controller
                     $invoxmd_service = new TranscriptionController();
                     $status = $invoxmd_service->deleteTranscriptINVOXMD($audio->id);
 
-                    if ($status !== 200 ) {
+                    if ($status !== 200) {
                         return response()->json(['error' => 'La transcripción no se ha borrado correctamente'], $status);
                     }
-
                 } catch (Exception $e) {
-                    return response()->json(['error' => 'Ha ocurrido un problema al borrar la transcripción en la base de datos ' ], 500);
+                    return response()->json(['error' => 'Ha ocurrido un problema al borrar la transcripción en la base de datos '], 500);
                 }
 
 
