@@ -34,7 +34,7 @@ class AudiosController extends Controller
             $data = Audio::where('doctor', $doctor)
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text', 'transcript.status']);
+                ->simplePaginate(10);
 
 
 
