@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\Controller;
 use Exception;
@@ -34,9 +35,10 @@ class AudiosController extends Controller
             $data = Audio::where('doctor', $doctor)
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->simplePaginate(10);
+                ->get(['audio.*', 'transcript.text', 'transcript.status']);
 
-
+            $paginated = new Paginator($data, $data->count(), 10);
+            return response()->json($paginated->toArray(), 200);
 
             /*
             $array = Audio::select('*')
@@ -56,7 +58,7 @@ class AudiosController extends Controller
             $paginated = new Paginator($array, $array->count(), 5);
             return response()->json($paginated->toArray(), 200);
             */
-            return response()->json($data, 200);
+            //return response()->json($data, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
