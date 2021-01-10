@@ -33,7 +33,7 @@ class AudiosController extends Controller
 
             $data = Audio::join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text', 'transcript.status'])
-                ->simplePaginate(10);
+                ->paginate(10);
 
             /*
             $array = Audio::select('*')
