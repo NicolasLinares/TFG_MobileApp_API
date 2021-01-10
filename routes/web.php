@@ -84,7 +84,7 @@ $router->group(['prefix' => 'v1'], function ($router) {
         $router->put('audio/name/{uid}', ['uses' => 'AudiosController@updateName']);
 
         // TRANSCRIPT
-        $router->get('transcript/{uid}', ['uses' => 'AudiosController@getTranscript']);
+        $router->get('transcript/{uid}', ['uses' => 'TranscriptionController@getTranscript']);
 
     });
 });
