@@ -83,11 +83,14 @@ class TranscriptionController extends Controller
     }
 
 
-    function deleteTranscriptINVOXMD($id)
+    function deleteTranscriptINVOXMD($id_audio)
     {
         $token = $this->getTokenINVOXMD();
 
-        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $id . '?username=nicolasenrique01';
+
+        $transcript = Transcript::where('id_audio', $id_audio)->first();
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcript['id'] . '?username=nicolasenrique01';
 
         $response = Http::withToken($token)->delete($API_INVOXMD_URL);
 
