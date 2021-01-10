@@ -83,10 +83,10 @@ class AudiosController extends Controller
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
                 ['doctor', '=', $doctor],
-                ['name', 'LIKE', '%'.$name.'%']
+                ['name', 'LIKE', '%' . $name . '%']
             ])
-            ->orderBy('id', 'desc')
-            ->simplePaginate(10);
+                ->orderBy('id', 'desc')
+                ->simplePaginate(10);
 
             return response()->json($data, 200);
         } else {
@@ -192,26 +192,25 @@ class AudiosController extends Controller
                 'description' => $data['description'] != "" ? $data['description'] : null,
                 'doctor' => $doctor
             ]);
-
         } catch (Exception $e) {
-            return response()->json(['error' => 'Ha ocurrido un problema al registrar la nota de voz en la base de datos' ], 500);
+            return response()->json(['error' => 'Ha ocurrido un problema al registrar la nota de voz en la base de datos'], 500);
         }
 
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
-        try{
+        try {
             // Se envía el audio y se inicializa la transcripción en la base de datos
             $invoxmd_service = new TranscriptionController();
             $invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos '.$e ], 500);
+            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
 
         return response()->json($audio, 201);
     }
 
-    
+
 
     function downloadAudioFile($uid, Request $request)
     {
@@ -248,12 +247,38 @@ class AudiosController extends Controller
             ])->first();
 
             if ($audio) {
+
+                // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
+                // -----------------------------------------------------------------
+                // Se borra la transcripción en el servicio de transcripción
+
+                try {
+                    // Se borra la transcripción
+                    $invoxmd_service = new TranscriptionController();
+                    $status = $invoxmd_service->deleteTranscriptINVOXMD($audio->id);
+
+                    if ($status !== 200 ) {
+                        return response()->json(['error' => 'La transcripción no se ha borrado correctamente'], $status);
+                    }
+
+                } catch (Exception $e) {
+                    return response()->json(['error' => 'Ha ocurrido un problema al borrar la transcripción en la base de datos ' ], 500);
+                }
+
+
+                // BASE DE DATOS
+                // -----------------------------------------------------------------
                 // Se borra el audio en la BBDD
+
                 Audio::where('uid', $uid)->delete();
+
+                // FILESYSTEM
+                // -----------------------------------------------------------------
                 // Se borra el audio en el filesystem
                 // El directorio es el id del usuario, por tanto si el audio se encuentra 
                 // en su carpeta entonces el acceso está permitido
                 Storage::disk('local')->delete($doctor . '/' . $audio['localpath']);
+
 
                 // Número de audios que tienen el mismo código de paciente (tag)
                 $n_audios = Audio::where([
@@ -266,8 +291,9 @@ class AudiosController extends Controller
                         'tag' => $audio['tag'],
                         'count' => $n_audios,
                         'message' => 'Audio borrado correctamente',
-                    ], 
-                    200);
+                    ],
+                    200
+                );
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
             }

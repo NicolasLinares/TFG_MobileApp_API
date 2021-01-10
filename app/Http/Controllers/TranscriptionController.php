@@ -34,6 +34,17 @@ class TranscriptionController extends Controller
         return $body['access_token'];
     }
 
+    private function getTranscriptINVOXMD($id)
+    {
+        $token = $this->getTokenINVOXMD();
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $id . '?username=nicolasenrique01';
+        $response = Http::withToken($token)->get($API_INVOXMD_URL);
+
+        return $response->json();
+    }
+
+
     function postAudioINVOXMD($audiofile, $id_audio)
     {
         $token = $this->getTokenINVOXMD();
@@ -71,23 +82,16 @@ class TranscriptionController extends Controller
         ]);
     }
 
-    function getTranscriptINVOXMD($id)
+
+    function deleteTranscriptINVOXMD($id)
     {
         $token = $this->getTokenINVOXMD();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $id . '?username=nicolasenrique01';
-        $response = Http::withToken($token)->get($API_INVOXMD_URL);
-
-        return $response->json();
-    }
-
-    function deleteTranscriptINVOXMD($token, $id)
-    {
-        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $id . '?username=nicolasenrique01';
 
         $response = Http::withToken($token)->delete($API_INVOXMD_URL);
 
-        return $response->json();
+        return $response->status();
     }
 
 
