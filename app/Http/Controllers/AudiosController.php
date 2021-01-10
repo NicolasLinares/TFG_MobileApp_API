@@ -31,9 +31,12 @@ class AudiosController extends Controller
                 ->simplePaginate(10);
             */
 
-            $data = Audio::join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text', 'transcript.status'])
-                ->paginate(10);
+            $join = Audio::join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->get(['audio.*', 'transcript.text', 'transcript.status']);
+
+            $data = $join->where('doctor', $doctor)
+            ->orderBy('id', 'desc')
+            ->simplePaginate(10);
 
             /*
             $array = Audio::select('*')
