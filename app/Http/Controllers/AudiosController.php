@@ -27,38 +27,15 @@ class AudiosController extends Controller
             $doctor = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
-            /*$data = Audio::where('doctor', $doctor)
-                ->orderBy('id', 'desc')
-                ->simplePaginate(10);
-            */
 
             $data = Audio::where('doctor', $doctor)
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text', 'transcript.status']);
+                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
             $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
 
-            /*
-            $array = Audio::select('*')
-                            ->where('doctor', $doctor)
-                            ->get()
-                            ->groupBy(function($audio) {
-                                $day = Carbon::parse($audio->created_at)->translatedFormat('d');
-                                if ($day < 10) {
-                                    $day = $day[1];
-                                }
-                                $month = Carbon::parse($audio->created_at)->translatedFormat('F');
-                                $year = Carbon::parse($audio->created_at)->translatedFormat('Y');
-                                return $day.' de '.$month.' de '.$year;
-                            });
-
-            //return response()->json($array, 200);
-            $paginated = new Paginator($array, $array->count(), 5);
-            return response()->json($paginated->toArray(), 200);
-            */
-            //return response()->json($data, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
