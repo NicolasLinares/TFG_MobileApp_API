@@ -8,7 +8,7 @@ use Tymon\JWTAuth\JWTAuth;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -107,7 +107,7 @@ class AuthController extends Controller
                     return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
                 }
 
-                if (!$token = Auth::guard('auth:api')->attempt($credentials)) {
+                if (!$token = auth()->attempt($credentials)) {
                     return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
                 }
 
