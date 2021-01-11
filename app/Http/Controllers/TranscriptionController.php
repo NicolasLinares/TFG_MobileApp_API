@@ -85,8 +85,7 @@ class TranscriptionController extends Controller
         ]);
 
 
-        $retrieveTranscript = new GetTranscriptFromINVOXMD($info['Id']);
-        $this->dispatch($retrieveTranscript)->delay(30);
+
     }
 
 
