@@ -199,7 +199,14 @@ class AudiosController extends Controller
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
 
-        return response()->json($audio, 201);
+
+        $tempArray = json_decode($audio, true);
+        $status = 'Transcribiendo';
+        $transcription = '-';
+        array_push($tempArray, $status);
+        array_push($tempArray, $transcription);
+
+        return response()->json($tempArray, 201);
     }
 
 
