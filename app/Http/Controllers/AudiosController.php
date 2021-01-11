@@ -243,7 +243,7 @@ class AudiosController extends Controller
         $audio['transcription'] = $transcription['text'];
 
         try {
-            $process = new GetTranscriptFromINVOXMD($transcription);
+            $process = new GetTranscriptFromINVOXMD();
             return response()->json($audio, 201);
 
             $this->dispatch($process)->delay(30);
