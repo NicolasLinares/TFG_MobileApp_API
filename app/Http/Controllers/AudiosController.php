@@ -239,6 +239,9 @@ class AudiosController extends Controller
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
 
+        $audio['status'] = 'Transcribiendo';
+        $audio['transcription'] = '-';
+        return response()->json($audio, 201);
 
         try {
             $this->dispatch(new GetTranscriptFromINVOXMD($info['Id']))->delay(30);
