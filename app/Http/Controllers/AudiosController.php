@@ -223,7 +223,7 @@ class AudiosController extends Controller
 
             $info = $response['Info'];
 
-            Transcript::create([
+            $transcription = Transcript::create([
                 'id' => $info['Id'],
                 'uid' => $uid_transcript,
                 'status' => $info['Status'],
@@ -239,11 +239,11 @@ class AudiosController extends Controller
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
 
-        $audio['status'] = 'Transcribiendo';
-        $audio['transcription'] = '-';
+        $audio['status'] = $transcription['status'];
+        $audio['transcription'] = $transcription['text'];
 
         try {
-            $process = new GetTranscriptFromINVOXMD($info['Id']);
+            $process = new GetTranscriptFromINVOXMD($transcription);
             return response()->json($audio, 201);
 
             $this->dispatch($process)->delay(30);

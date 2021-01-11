@@ -17,7 +17,7 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     // Id de la transcripción
-    protected $audio;
+    protected $transcription;
 
 
     /**
@@ -25,9 +25,9 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct(Transcript $transc)
     {
-        $this->id_transcript = $id;
+        $this->transcription = $transc;
     }
 
     /**
@@ -37,11 +37,9 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        // Obtiene la transcripción asociada al id del audio
-        $transcript = Transcript::where('id', $this->id_transcript)->first();
 
         // Si no está completada se procede a recuperarla del servicio de transcripción
-        if ($transcript['status'] !== 'Completada') {
+        if ($this->transcription['status'] !== 'Completada') {
 
             // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
             // -----------------------------------------------------------------
@@ -49,16 +47,16 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
             // Se obtiene la transcripción por primera vez y se registra en la base de datos
             $invoxmd_service = new TranscriptionController();
             
-            $response = $invoxmd_service->getTranscriptINVOXMD($transcript['id']);
+            $response = $invoxmd_service->getTranscriptINVOXMD($this->transcription['id']);
 
             $info = $response['Info'];
 
-            $transcript->status = $info['Status'];
-            $transcript->progress = strval($info['Progress']);
-            $transcript->start_date = $info['StartDate'];
-            $transcript->end_date = $info['EndDate'];
-            $transcript->text = $response['Text'];
-            $transcript->save();
+            $this->transcription['status'] = $info['Status'];
+            $this->transcription['progress'] = strval($info['Progress']);
+            $this->transcription['start_date'] = $info['StartDate'];
+            $this->transcription['end_date'] = $info['EndDate'];
+            $this->transcription['text'] = $response['Text'];
+            $this->transcription->save();
         }
     }
 }
