@@ -243,10 +243,10 @@ class AudiosController extends Controller
         $audio['transcription'] = $transcription['text'];
 
         try {
-            $process = new GetTranscriptFromINVOXMD();
+            //$process = new GetTranscriptFromINVOXMD();
             return response()->json($audio, 201);
 
-            $this->dispatch($process)->delay(30);
+            //$this->dispatch($process)->delay(30);
             
         } catch (Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un problema al lanzar el proceso en segundo plano ' . $e], 500);
