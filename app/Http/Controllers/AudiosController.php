@@ -200,13 +200,10 @@ class AudiosController extends Controller
         }
 
 
-        $tempArray = json_decode($audio, true);
-        $status['status'] = 'Transcribiendo';
-        $transcription['transcription'] = '-';
-        array_push($tempArray, $status);
-        array_push($tempArray, $transcription);
+        $audio['status'] = 'Transcribiendo';
+        $audio['transcription'] = '-';
 
-        return response()->json($tempArray, 201);
+        return response()->json($audio, 201);
     }
 
 
