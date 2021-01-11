@@ -17,7 +17,7 @@ use App\Jobs\GetTranscriptFromINVOXMD;
 class TranscriptionController extends Controller
 {
 
-    private function getTokenINVOXMD()
+    function getTokenINVOXMD()
     {
         $API_INVOXMD_URL = env('API_INVOXMD_URL');
         $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
@@ -84,9 +84,8 @@ class TranscriptionController extends Controller
             'id_audio' => $id_audio
         ]);
 
-
-        $retrieveTranscript = new GetTranscriptFromINVOXMD($info['Id']);
-        $this->dispatch($retrieveTranscript)->delay(30);
+        
+        $this->dispatch(new GetTranscriptFromINVOXMD($info['Id']))->delay(30);
     }
 
 

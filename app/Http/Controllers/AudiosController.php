@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audio;
+use App\Models\Transcript;
 use App\Http\Controllers\TranscriptionController;
 
 use Illuminate\Http\Request;
@@ -15,7 +16,9 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use Exception;
 
+use App\Jobs\GetTranscriptFromINVOXMD;
 
+use Illuminate\Support\Facades\Http;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
@@ -49,16 +52,15 @@ class AudiosController extends Controller
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
-                    ['doctor', '=', $doctor],
-                    ['tag', '=', $tag]
-                ])
+                ['doctor', '=', $doctor],
+                ['tag', '=', $tag]
+            ])
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
             $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
-
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -192,17 +194,62 @@ class AudiosController extends Controller
         // -----------------------------------------------------------------
 
         try {
+
             // Se envía el audio y se inicializa la transcripción en la base de datos
             $invoxmd_service = new TranscriptionController();
-            $invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
+            //$invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
+
+
+            $token = $invoxmd_service->getTokenINVOXMD();
+
+            $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
+
+            $response = Http::asForm()->withToken($token)->post(
+                $API_INVOXMD_URL,
+                [
+                    'Format' => 'WAV',
+                    'Data' => base64_encode(file_get_contents($audiofile)),
+                    'FileName' => $audio->id
+                ]
+            )->json();
+
+
+            // Se guarda la información en la base de datos
+            $uid_transcript = Str::random(32);
+            // Evitamos que se cree un número random igual, debe ser único
+            if (Transcript::where('uid', $uid_transcript)->exists()) {
+                $uid_transcript = Str::random(32);
+            }
+
+            $info = $response['Info'];
+
+            Transcript::create([
+                'id' => $info['Id'],
+                'uid' => $uid_transcript,
+                'status' => $info['Status'],
+                'progress' => strval($info['Progress']),
+                'start_date' => strtotime($info['StartDate']),
+                'end_date' => null,
+                'text' => $response['Text'],
+                'id_audio' => $audio->id
+            ]);
+
+
         } catch (Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
 
 
+        try {
+            $this->dispatch(new GetTranscriptFromINVOXMD($info['Id']))->delay(30);
+            
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Ha ocurrido un problema al lanzar el proceso en segundo plano ' . $e], 500);
+        }
+
+
         $audio['status'] = 'Transcribiendo';
         $audio['transcription'] = '-';
-
         return response()->json($audio, 201);
     }
 
