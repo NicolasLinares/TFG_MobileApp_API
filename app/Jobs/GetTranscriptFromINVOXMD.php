@@ -17,7 +17,7 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     // Id de la transcripción
-    protected $id_transcript;
+    protected $audio;
 
 
     /**
@@ -49,7 +49,7 @@ class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
             // Se obtiene la transcripción por primera vez y se registra en la base de datos
             $invoxmd_service = new TranscriptionController();
             
-            $response = $invoxmd_service->getTranscriptINVOXMD($this->id_transcript);
+            $response = $invoxmd_service->getTranscriptINVOXMD($transcript['id']);
 
             $info = $response['Info'];
 
