@@ -11,10 +11,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 use App\Http\Controllers\TranscriptionController;
 
-class GetTranscriptFromINVOXMD extends Job implements SelfHandling, ShouldQueue
+class GetTranscriptFromINVOXMD extends Job 
 {
 
-    use InteractsWithQueue, SerializesModels;
 
     // Id de la transcripción
     protected $transcription;
