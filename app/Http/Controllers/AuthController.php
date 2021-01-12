@@ -93,31 +93,29 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if ($request->isJson()) {
-            try {
                 
-                $credentials = $request->only('email', 'password');
+            $credentials = $request->only('email', 'password');
+            
 
-                // Se comprueba que los campos cumplen el formato
-                $validator = Validator::make($credentials, [
-                    'email' => 'required|email|max:255',
-                    'password' => 'required'
-                ]);
+            // Se comprueba que los campos cumplen el formato
+            $validator = Validator::make($credentials, [
+                'email' => 'required|email|max:255',
+                'password' => 'required'
+            ]);
 
-                if ($validator->fails()) {
-                    return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
-                }
-
-                if (!$token = auth()->attempt($credentials)) {
-                    return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
-                }
-
-                
-                // Éxito - Login correcto
-                return $this->respondWithToken($token);
-
-            } catch (Exception $e) {
-                return response()->json(['error' => 'Usuario no autorizado '. $e], 401);
+            if ($validator->fails()) {
+                return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
             }
+            
+
+            if (!$token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
+            }
+
+            
+            // Éxito - Login correcto
+            return $this->respondWithToken($token);
+
         } else {
             return response()->json(['error' => 'El formato no es válido' ], 400);
         }
