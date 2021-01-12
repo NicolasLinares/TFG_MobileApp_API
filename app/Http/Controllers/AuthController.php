@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -16,14 +17,10 @@ use Exception;
 
 class AuthController extends Controller
 {
-    /**
-     * @var \Tymon\JWTAuth\JWTAuth
-     */
-    protected $jwt;
 
-    public function __construct(JWTAuth $jwt)
+    public function __construct()
     {
-        $this->jwt = $jwt;
+        $this->middleware ('auth:api', ['except' => ['login']]);
     }
 
     /**
@@ -98,7 +95,7 @@ class AuthController extends Controller
             
 
             // Se comprueba que los campos cumplen el formato
-            $validator = Validator::make($credentials, [
+            $validator = Validator::make ($credentials, [
                 'email' => 'required|email|max:255',
                 'password' => 'required'
             ]);
@@ -108,10 +105,11 @@ class AuthController extends Controller
             }
             
 
-            if (!$token = auth()->attempt($credentials)) {
+            if (!$token = auth()->attempt ($credentials)) {
                 return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
             }
-
+            
+            
             
             // Éxito - Login correcto
             return $this->respondWithToken($token);

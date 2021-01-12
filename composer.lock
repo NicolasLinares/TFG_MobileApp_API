@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "514d24574c2d9f6f371bfef8929fe99a",
+    "content-hash": "02b475f8108190ff1d6e1af99a303c8a",
     "packages": [
         {
             "name": "brick/math",
@@ -362,7 +362,7 @@
         },
         {
             "name": "illuminate/auth",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/auth.git",
@@ -411,15 +411,11 @@
             ],
             "description": "The Illuminate Auth package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-15T13:44:33+00:00"
         },
         {
             "name": "illuminate/broadcasting",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/broadcasting.git",
@@ -467,15 +463,11 @@
             ],
             "description": "The Illuminate Broadcasting package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-09T18:07:50+00:00"
         },
         {
             "name": "illuminate/bus",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
@@ -520,15 +512,11 @@
             ],
             "description": "The Illuminate Bus package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-29T15:18:15+00:00"
         },
         {
             "name": "illuminate/cache",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
@@ -577,24 +565,20 @@
             ],
             "description": "The Illuminate Cache package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-26T15:57:28+00:00"
         },
         {
             "name": "illuminate/collections",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "4647141880c193a0edaa91754004d8bc7471e56b"
+                "reference": "fa1f5a2809a777040ab1616527dc2e66f4ae93f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/4647141880c193a0edaa91754004d8bc7471e56b",
-                "reference": "4647141880c193a0edaa91754004d8bc7471e56b",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/fa1f5a2809a777040ab1616527dc2e66f4ae93f4",
+                "reference": "fa1f5a2809a777040ab1616527dc2e66f4ae93f4",
                 "shasum": ""
             },
             "require": {
@@ -631,15 +615,11 @@
             ],
             "description": "The Illuminate Collections package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2020-12-08T17:15:16+00:00"
+            "time": "2021-01-12T15:21:34+00:00"
         },
         {
             "name": "illuminate/config",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -679,15 +659,11 @@
             ],
             "description": "The Illuminate Config package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-10-27T15:20:30+00:00"
         },
         {
             "name": "illuminate/console",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
@@ -739,15 +715,11 @@
             ],
             "description": "The Illuminate Console package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-11T19:59:27+00:00"
         },
         {
             "name": "illuminate/container",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -790,15 +762,11 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-01T14:31:29+00:00"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -838,24 +806,20 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-18T14:24:20+00:00"
         },
         {
             "name": "illuminate/database",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "8184377c98e4917dc06c0dff18f6507f970691df"
+                "reference": "c6ad4bdfa94c259d5ece11c523172238f01dfa00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/8184377c98e4917dc06c0dff18f6507f970691df",
-                "reference": "8184377c98e4917dc06c0dff18f6507f970691df",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/c6ad4bdfa94c259d5ece11c523172238f01dfa00",
+                "reference": "c6ad4bdfa94c259d5ece11c523172238f01dfa00",
                 "shasum": ""
             },
             "require": {
@@ -906,15 +870,11 @@
                 "orm",
                 "sql"
             ],
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2021-01-02T21:32:04+00:00"
+            "time": "2021-01-12T15:30:54+00:00"
         },
         {
             "name": "illuminate/encryption",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/encryption.git",
@@ -957,15 +917,11 @@
             ],
             "description": "The Illuminate Encryption package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-04T20:17:36+00:00"
         },
         {
             "name": "illuminate/events",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
@@ -1012,15 +968,11 @@
             ],
             "description": "The Illuminate Events package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-09T18:07:50+00:00"
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -1074,15 +1026,11 @@
             ],
             "description": "The Illuminate Filesystem package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-08T17:15:16+00:00"
         },
         {
             "name": "illuminate/hashing",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/hashing.git",
@@ -1122,24 +1070,20 @@
             ],
             "description": "The Illuminate Hashing package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-10-27T15:20:30+00:00"
         },
         {
             "name": "illuminate/http",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
-                "reference": "86afbb1ac9a73d7a5ffff32be285e2b11276bb5d"
+                "reference": "49b0fbe16708eeea63ce5f71e63ff6e6a695dfc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/http/zipball/86afbb1ac9a73d7a5ffff32be285e2b11276bb5d",
-                "reference": "86afbb1ac9a73d7a5ffff32be285e2b11276bb5d",
+                "url": "https://api.github.com/repos/illuminate/http/zipball/49b0fbe16708eeea63ce5f71e63ff6e6a695dfc0",
+                "reference": "49b0fbe16708eeea63ce5f71e63ff6e6a695dfc0",
                 "shasum": ""
             },
             "require": {
@@ -1180,15 +1124,11 @@
             ],
             "description": "The Illuminate Http package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2020-12-08T17:15:16+00:00"
+            "time": "2021-01-05T16:41:31+00:00"
         },
         {
             "name": "illuminate/log",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/log.git",
@@ -1229,15 +1169,11 @@
             ],
             "description": "The Illuminate Log package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-11-16T22:35:48+00:00"
         },
         {
             "name": "illuminate/macroable",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1275,15 +1211,11 @@
             ],
             "description": "The Illuminate Macroable package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-10-27T15:20:30+00:00"
         },
         {
             "name": "illuminate/pagination",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pagination.git",
@@ -1325,15 +1257,11 @@
             ],
             "description": "The Illuminate Pagination package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-11-26T14:30:03+00:00"
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
@@ -1373,24 +1301,20 @@
             ],
             "description": "The Illuminate Pipeline package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-10-27T15:20:30+00:00"
         },
         {
             "name": "illuminate/queue",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/queue.git",
-                "reference": "34183c7575e5f3b785f5f31a3718f49b91350d04"
+                "reference": "59734ca07889b791a38f7182f396db2b6cf4bdd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/queue/zipball/34183c7575e5f3b785f5f31a3718f49b91350d04",
-                "reference": "34183c7575e5f3b785f5f31a3718f49b91350d04",
+                "url": "https://api.github.com/repos/illuminate/queue/zipball/59734ca07889b791a38f7182f396db2b6cf4bdd3",
+                "reference": "59734ca07889b791a38f7182f396db2b6cf4bdd3",
                 "shasum": ""
             },
             "require": {
@@ -1438,15 +1362,11 @@
             ],
             "description": "The Illuminate Queue package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2021-01-05T14:56:06+00:00"
+            "time": "2021-01-08T14:07:38+00:00"
         },
         {
             "name": "illuminate/session",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
@@ -1494,24 +1414,20 @@
             ],
             "description": "The Illuminate Session package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-08T17:15:16+00:00"
         },
         {
             "name": "illuminate/support",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "2393bca6dc657b4364cebb59be160ee7a8fa10e3"
+                "reference": "880b330c516f3e5cd9a096b9f476e3c82db2eb93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/2393bca6dc657b4364cebb59be160ee7a8fa10e3",
-                "reference": "2393bca6dc657b4364cebb59be160ee7a8fa10e3",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/880b330c516f3e5cd9a096b9f476e3c82db2eb93",
+                "reference": "880b330c516f3e5cd9a096b9f476e3c82db2eb93",
                 "shasum": ""
             },
             "require": {
@@ -1561,24 +1477,20 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2020-12-29T15:08:35+00:00"
+            "time": "2021-01-12T15:30:54+00:00"
         },
         {
             "name": "illuminate/testing",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/testing.git",
-                "reference": "1746805344b6fdb383751c3cd5f001386a255bfc"
+                "reference": "b5bc45291b99ea810413a9da7319f0235b516353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/testing/zipball/1746805344b6fdb383751c3cd5f001386a255bfc",
-                "reference": "1746805344b6fdb383751c3cd5f001386a255bfc",
+                "url": "https://api.github.com/repos/illuminate/testing/zipball/b5bc45291b99ea810413a9da7319f0235b516353",
+                "reference": "b5bc45291b99ea810413a9da7319f0235b516353",
                 "shasum": ""
             },
             "require": {
@@ -1618,15 +1530,11 @@
             ],
             "description": "The Illuminate Testing package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2020-12-17T13:29:36+00:00"
+            "time": "2021-01-07T16:57:53+00:00"
         },
         {
             "name": "illuminate/translation",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -1670,24 +1578,20 @@
             ],
             "description": "The Illuminate Translation package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-12-13T20:32:54+00:00"
         },
         {
             "name": "illuminate/validation",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "67a2f5d8a7e69490ac390f86dacfcd923b67c5d8"
+                "reference": "97dcd9364bd6cee56aaaa87a48b90c295bb9e6c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/67a2f5d8a7e69490ac390f86dacfcd923b67c5d8",
-                "reference": "67a2f5d8a7e69490ac390f86dacfcd923b67c5d8",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/97dcd9364bd6cee56aaaa87a48b90c295bb9e6c3",
+                "reference": "97dcd9364bd6cee56aaaa87a48b90c295bb9e6c3",
                 "shasum": ""
             },
             "require": {
@@ -1729,15 +1633,11 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "time": "2020-12-21T14:38:56+00:00"
+            "time": "2021-01-12T15:30:44+00:00"
         },
         {
             "name": "illuminate/view",
-            "version": "v8.21.0",
+            "version": "v8.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
@@ -1783,10 +1683,6 @@
             ],
             "description": "The Illuminate View package.",
             "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
             "time": "2020-11-02T14:01:41+00:00"
         },
         {
@@ -1885,6 +1781,60 @@
                 "source": "https://github.com/laravel/lumen-framework"
             },
             "time": "2020-11-17T16:42:41+00:00"
+        },
+        {
+            "name": "laravel/ui",
+            "version": "v3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/ui.git",
+                "reference": "a1f82c6283c8373ea1958b8a27c3d5c98cade351"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/a1f82c6283c8373ea1958b8a27c3d5c98cade351",
+                "reference": "a1f82c6283c8373ea1958b8a27c3d5c98cade351",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^8.0",
+                "illuminate/filesystem": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Ui\\UiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Ui\\": "src/",
+                    "Illuminate\\Foundation\\Auth\\": "auth-backend/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel UI utilities and presets.",
+            "keywords": [
+                "laravel",
+                "ui"
+            ],
+            "time": "2021-01-06T19:20:22+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -4435,16 +4385,16 @@
         },
         {
             "name": "tymon/jwt-auth",
-            "version": "1.0.2",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tymondesigns/jwt-auth.git",
-                "reference": "e588cb719539366c0e2f6017f975379cb73e9680"
+                "reference": "fb0cfc8b6bf82ec3ace2eed10f27db0da064d8f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tymondesigns/jwt-auth/zipball/e588cb719539366c0e2f6017f975379cb73e9680",
-                "reference": "e588cb719539366c0e2f6017f975379cb73e9680",
+                "url": "https://api.github.com/repos/tymondesigns/jwt-auth/zipball/fb0cfc8b6bf82ec3ace2eed10f27db0da064d8f9",
+                "reference": "fb0cfc8b6bf82ec3ace2eed10f27db0da064d8f9",
                 "shasum": ""
             },
             "require": {
@@ -4455,14 +4405,15 @@
                 "lcobucci/jwt": "<3.4",
                 "namshi/jose": "^7.0",
                 "nesbot/carbon": "^1.0|^2.0",
-                "php": "^5.5.9|^7.0"
+                "php": "^7.2|^8.0"
             },
             "require-dev": {
                 "illuminate/console": "^5.2|^6|^7|^8",
                 "illuminate/database": "^5.2|^6|^7|^8",
                 "illuminate/routing": "^5.2|^6|^7|^8",
                 "mockery/mockery": ">=0.9.9",
-                "phpunit/phpunit": "~4.8|~6.0"
+                "phpunit/phpunit": "^8.5|^9.4",
+                "yoast/phpunit-polyfills": "^0.2.0"
             },
             "type": "library",
             "extra": {
@@ -4505,11 +4456,7 @@
                 "jwt",
                 "laravel"
             ],
-            "support": {
-                "issues": "https://github.com/tymondesigns/jwt-auth/issues",
-                "source": "https://github.com/tymondesigns/jwt-auth"
-            },
-            "time": "2020-11-27T12:32:42+00:00"
+            "time": "2020-12-10T09:51:15+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -6912,7 +6859,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "tymon/jwt-auth": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
