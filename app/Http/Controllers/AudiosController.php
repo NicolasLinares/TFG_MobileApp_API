@@ -186,7 +186,7 @@ class AudiosController extends Controller
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
-        dispatch((new PostAudioToINVOXMD())->onQueue('audio'));
+        dispatch((new PostAudioToINVOXMD($directory_name . '/' . $data['localpath'], $audio['id']))->onQueue('audio'));
 
 
         // Se añade información sobre la transcripción

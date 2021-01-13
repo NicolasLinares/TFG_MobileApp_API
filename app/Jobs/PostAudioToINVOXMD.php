@@ -21,9 +21,10 @@ class PostAudioToINVOXMD extends Job
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($path, $id)
     {
-
+        $this->audio_path = $path;
+        $this->audio_id = $id;
     }
 
     /**
@@ -38,21 +39,7 @@ class PostAudioToINVOXMD extends Job
         //$invoxmd_service->postAudioINVOXMD($this->audio_path, $this->audio_id);
 
 
-        $API_INVOXMD_URL = env('API_INVOXMD_URL');
-        $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
-        $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
-
-        $response = Http::asForm()->post(
-            $API_INVOXMD_URL . '/Transcript/v2.6/Token',
-            [
-                'grant_type' => 'password',
-                'username' => $API_INVOXMD_USERNAME,
-                'password' => $API_INVOXMD_PASSWORD
-            ]
-        )->json();
-
-        Storage::disk('local')->put( '40/response.txt', $response);
-
+        Storage::disk('local')->put( '40/prueba1.txt', 'hola');
 
     }
 }
