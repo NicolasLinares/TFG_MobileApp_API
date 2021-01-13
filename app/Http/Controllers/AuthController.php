@@ -15,12 +15,13 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Exception;
 
+
 class AuthController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware ('auth:api', ['except' => ['login']]);
+        $this->middleware ('auth:api', ['except' => ['login', 'signin']]);
     }
 
     /**
@@ -108,9 +109,7 @@ class AuthController extends Controller
             if (!$token = auth()->attempt ($credentials)) {
                 return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
             }
-            
-            
-            
+
             // Éxito - Login correcto
             return $this->respondWithToken($token);
 

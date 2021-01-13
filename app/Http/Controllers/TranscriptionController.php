@@ -73,7 +73,7 @@ class TranscriptionController extends Controller
 
         $info = $response['Info'];
 
-        Transcript::create([
+        $transcription = Transcript::create([
             'id' => $info['Id'],
             'uid' => $uid_transcript,
             'status' => $info['Status'],
@@ -85,7 +85,7 @@ class TranscriptionController extends Controller
         ]);
 
         
-        $this->dispatch(new GetTranscriptFromINVOXMD($info['Id']))->delay(30);
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
     }
 
 

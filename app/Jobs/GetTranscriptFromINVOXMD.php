@@ -24,8 +24,9 @@ class GetTranscriptFromINVOXMD extends Job
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Transcript $transc)
     {
+	$this->transcription = $transc;
     }
 
     /**

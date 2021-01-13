@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audio;
-use App\Models\Transcript;
 use App\Http\Controllers\TranscriptionController;
 
 use Illuminate\Http\Request;
@@ -16,9 +15,6 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use Exception;
 
-use App\Jobs\GetTranscriptFromINVOXMD;
-
-use Illuminate\Support\Facades\Http;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de los usuarios
@@ -193,51 +189,17 @@ class AudiosController extends Controller
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
+
         try {
 
             // Se envía el audio y se inicializa la transcripción en la base de datos
             $invoxmd_service = new TranscriptionController();
-            //$invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
-
-
-            $token = $invoxmd_service->getTokenINVOXMD();
-
-            $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
-
-            $response = Http::asForm()->withToken($token)->post(
-                $API_INVOXMD_URL,
-                [
-                    'Format' => 'WAV',
-                    'Data' => base64_encode(file_get_contents($audiofile)),
-                    'FileName' => $audio->id
-                ]
-            )->json();
-
-
-            // Se guarda la información en la base de datos
-            $uid_transcript = Str::random(32);
-            // Evitamos que se cree un número random igual, debe ser único
-            if (Transcript::where('uid', $uid_transcript)->exists()) {
-                $uid_transcript = Str::random(32);
-            }
-
-            $info = $response['Info'];
-
-            $transcription = Transcript::create([
-                'id' => $info['Id'],
-                'uid' => $uid_transcript,
-                'status' => $info['Status'],
-                'progress' => strval($info['Progress']),
-                'start_date' => strtotime($info['StartDate']),
-                'end_date' => null,
-                'text' => $response['Text'],
-                'id_audio' => $audio->id
-            ]);
-
+            $invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
 
         } catch (Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
         }
+
 
         $audio['status'] = 'Transcribiendo';
         $audio['transcription'] = '-';
