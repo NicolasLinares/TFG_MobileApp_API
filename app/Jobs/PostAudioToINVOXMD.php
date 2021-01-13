@@ -65,7 +65,7 @@ class PostAudioToINVOXMD extends Job
             $API_INVOXMD_URL,
             [
                 'Format' => 'WAV',
-                'Data' => base64_encode('Nada'),
+                'Data' => '-',
                 'FileName' => 'nuevo_audio'
             ]
         )->json();
@@ -73,7 +73,7 @@ class PostAudioToINVOXMD extends Job
 
 
         Transcript::create([
-            'id' => '2',
+            'id' => '3',
             'uid' => Str::random(32),
             'status' => 'Transcribiendo',
             'progress' => '0',
