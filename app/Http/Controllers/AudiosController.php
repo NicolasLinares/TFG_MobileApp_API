@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\PostAudioToINVOXMD;
@@ -34,7 +34,7 @@ class AudiosController extends Controller
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            $paginated = new Paginator($data, 10, 2);
+            $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
@@ -56,7 +56,7 @@ class AudiosController extends Controller
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            $paginated = new Paginator($data, 10);
+            $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
@@ -78,7 +78,7 @@ class AudiosController extends Controller
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            $paginated = new Paginator($data, 10);
+            $paginated = new Paginator($data, $data->count(), 10);
             return response()->json($paginated->toArray(), 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
