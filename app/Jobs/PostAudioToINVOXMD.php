@@ -21,10 +21,9 @@ class PostAudioToINVOXMD extends Job
      *
      * @return void
      */
-    public function __construct($path, $id)
+    public function __construct()
     {
-        $this->audio_path = $path;
-        $this->audio_id = $id;
+
     }
 
     /**
