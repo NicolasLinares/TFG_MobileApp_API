@@ -39,11 +39,11 @@ class PostAudioToINVOXMD extends Job
     public function handle()
     {
         // Se envía el audio al servicio de transcripción
-        //$invoxmd_service = new TranscriptionController();
-        //$invoxmd_service->postAudioINVOXMD($this->audio_path, $this->audio_id);
+        $invoxmd_service = new TranscriptionController();
+        $invoxmd_service->postAudioINVOXMD($this->audio_base64, $this->audio_id);
 
 
-        $API_INVOXMD_URL = env('API_INVOXMD_URL');
+        /*$API_INVOXMD_URL = env('API_INVOXMD_URL');
         $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
         $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
 
@@ -85,7 +85,7 @@ class PostAudioToINVOXMD extends Job
             'id_audio' => $this->audio_id
         ]);
 
-        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
-
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(60));
+*/
     }
 }

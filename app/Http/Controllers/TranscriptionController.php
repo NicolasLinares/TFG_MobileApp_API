@@ -52,32 +52,28 @@ class TranscriptionController extends Controller
     }
 
 
-    function postAudioINVOXMD($audio_path, $id_audio)
+    function postAudioINVOXMD($audio_base64, $id_audio)
     {
 
         $token = $this->getTokenINVOXMD();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
-        $audiofile = File::get('/var/www/html/TFG_MobileApp_API/storage/app/40/masde2mb.wav');
 
         $response = Http::asForm()->withToken($token)->post(
             $API_INVOXMD_URL,
             [
                 'Format' => 'WAV',
-                'Data' => base64_encode($audiofile),
+                'Data' => $audio_base64,
                 'FileName' => $id_audio
             ]
         )->json();
 
 
-
         // Se registra la nueva transcripción en la base de datos
-        $uid_transcript = Str::random(32);
         $info = $response['Info'];
-
         $transcription = Transcript::create([
             'id' => $info['Id'],
-            'uid' => $uid_transcript,
+            'uid' => Str::random(32),
             'status' => $info['Status'],
             'progress' => strval($info['Progress']),
             'start_date' => strtotime($info['StartDate']),
@@ -86,7 +82,7 @@ class TranscriptionController extends Controller
             'id_audio' => $id_audio
         ]);
 
-        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(60));
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
     }
 
 
