@@ -128,7 +128,8 @@ class AudiosController extends Controller
      */
     public function add(Request $request)
     {
-
+        // VALIDACIÓN
+        // -----------------------------------------------------------------
         $body = $request->all();
 
         // Metadata del audio (name, extension, patient code, localpath...)
@@ -187,10 +188,13 @@ class AudiosController extends Controller
 
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
-
         $base64 = base64_encode($content_file);
         dispatch((new PostAudioToINVOXMD($base64, $audio['id']))->onQueue('audio'));
 
+
+
+        // RESPUESTA
+        // -----------------------------------------------------------------
         // Se añade información sobre la transcripción
         $audio['status'] = 'Transcribiendo';
         $audio['transcription'] = '-';

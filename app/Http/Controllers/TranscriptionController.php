@@ -2,72 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
 use App\Models\Transcript;
 use App\Models\Audio;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-
 use App\Jobs\GetTranscriptFromINVOXMD;
-
-
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 
 
 // Esta clase permite controlar todas las peticiones HTTP de INVOX MEDICAL
 class TranscriptionController extends Controller
 {
 
-    function getTokenINVOXMD()
-    {
-        $API_INVOXMD_URL = env('API_INVOXMD_URL');
-        $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
-        $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+    protected $API_INVOXMD_SERVER = env('API_INVOXMD_URL');
+    protected $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
+    protected $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
 
+    protected $URL_TOKEN = $API_INVOXMD_SERVER . '/Transcript/v2.6/Token';
+    protected $URL_TRANSCRIPT = $API_INVOXMD_SERVER . 'Transcript/v2.6/Transcript';
+
+
+    private function getTokenINVOXMD()
+    {
         $response = Http::asForm()->post(
-            $API_INVOXMD_URL . '/Transcript/v2.6/Token',
+            $this->URL_TOKEN,
             [
                 'grant_type' => 'password',
-                'username' => $API_INVOXMD_USERNAME,
-                'password' => $API_INVOXMD_PASSWORD
+                'username' => $this->API_INVOXMD_USERNAME,
+                'password' => $this->API_INVOXMD_PASSWORD
             ]
-        );
+        )->json();
 
-        $body = $response->json();
-
-        return $body['access_token'];
+        return $response['access_token'];
     }
 
     function getTranscriptINVOXMD($id)
     {
         $token = $this->getTokenINVOXMD();
-
-        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $id . '?username=nicolasenrique01';
-        $response = Http::withToken($token)->get($API_INVOXMD_URL);
-
-        return $response->json();
+        $URL = $this->URL_TRANSCRIPT . '/' . $id . '?username=nicolasenrique01';
+        return Http::withToken($token)->get($URL)->json();
     }
 
 
     function postAudioINVOXMD($audio_base64, $id_audio)
     {
-
         $token = $this->getTokenINVOXMD();
-
-        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
+        $URL = $this->URL_TRANSCRIPT . '?username=nicolasenrique01';
 
         $response = Http::asForm()->withToken($token)->post(
-            $API_INVOXMD_URL,
+            $URL,
             [
                 'Format' => 'WAV',
                 'Data' => $audio_base64,
                 'FileName' => $id_audio
             ]
         )->json();
-
 
         // Se registra la nueva transcripción en la base de datos
         $info = $response['Info'];
@@ -86,23 +78,8 @@ class TranscriptionController extends Controller
     }
 
 
-    function deleteTranscriptINVOXMD($id_audio)
-    {
-        $token = $this->getTokenINVOXMD();
-
-        $transcript = Transcript::where('id_audio', $id_audio)->first();
-
-        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcript['id'] . '?username=nicolasenrique01';
-
-        $response = Http::withToken($token)->delete($API_INVOXMD_URL);
-
-        return $response->status();
-    }
-
-
     function getTranscript($uid, Request $request)
     {
-
         if ($request->isJson()) {
             $doctor = Auth::id();
             // Obtiene primero el id del audio asociado
@@ -112,19 +89,19 @@ class TranscriptionController extends Controller
                     ['uid', '=', $uid]
                 ])
                 ->first();
-            
+
             // Obtiene la transcripción asociada al id del audio
             $transcript = Transcript::where('id_audio', $id_audio['id'])->first();
 
             // Si no está completada se procede a recuperarla del servicio de transcripción
             if ($transcript['status'] !== 'Completada') {
-            
+
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
 
                 // Se obtiene la transcripción por primera vez y se registra en la base de datos
                 $response = $this->getTranscriptINVOXMD($transcript['id']);
-                
+
                 $info = $response['Info'];
 
                 $transcript->status = $info['Status'];
@@ -137,9 +114,22 @@ class TranscriptionController extends Controller
             }
 
             return response()->json($transcript, 200);
-            
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
+    }
+
+
+    function deleteTranscriptINVOXMD($id_audio)
+    {
+        $token = $this->getTokenINVOXMD();
+
+        $transcript = Transcript::where('id_audio', $id_audio)->first();
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcript['id'] . '?username=nicolasenrique01';
+
+        $response = Http::withToken($token)->delete($API_INVOXMD_URL);
+
+        return $response->status();
     }
 }
