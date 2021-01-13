@@ -54,15 +54,10 @@ class TranscriptionController extends Controller
 
     function postAudioINVOXMD($audio_path, $id_audio)
     {
-        Storage::disk('local')->put( '40/prueba1.txt', 'prueba 1');
 
         $token = $this->getTokenINVOXMD();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
-
-        Storage::disk('local')->put( '40/prueba2.txt', 'prueba 2');
-
-
         $audiofile = File::get('/var/www/html/TFG_MobileApp_API/storage/app/40/masde2mb.wav');
 
         $response = Http::asForm()->withToken($token)->post(
@@ -74,7 +69,6 @@ class TranscriptionController extends Controller
             ]
         )->json();
 
-        Storage::disk('local')->put( '40/prueba.txt', 'prueba 2');
 
 
         // Se registra la nueva transcripción en la base de datos

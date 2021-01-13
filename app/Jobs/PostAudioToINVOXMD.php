@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 
+use App\Jobs\GetTranscriptFromINVOXMD;
+
 
 class PostAudioToINVOXMD extends Job
 {
@@ -70,17 +72,20 @@ class PostAudioToINVOXMD extends Job
         )->json();
 
 
+        $info = $response['Info'];
 
-        Transcript::create([
-            'id' => '3',
+        $transcription = Transcript::create([
+            'id' => $info['Id'],
             'uid' => Str::random(32),
-            'status' => 'Transcribiendo',
-            'progress' => '0',
-            'start_date' => null,
+            'status' => $info['Status'],
+            'progress' => strval($info['Progress']),
+            'start_date' => strtotime($info['StartDate']),
             'end_date' => null,
             'text' => $response['Text'],
-            'id_audio' => 750
+            'id_audio' => $this->audio_id
         ]);
+
+        //dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
 
     }
 }

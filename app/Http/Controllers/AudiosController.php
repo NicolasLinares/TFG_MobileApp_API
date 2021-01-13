@@ -155,7 +155,9 @@ class AudiosController extends Controller
         $audiofile = $body['file']; // archivo de audio
         $directory_name = $doctor; // user id
 
-        Storage::disk('local')->put($directory_name . '/' . $data['localpath'], file_get_contents($audiofile));
+        $content_file = file_get_contents($audiofile);
+
+        Storage::disk('local')->put($directory_name . '/' . $data['localpath'], $content_file);
 
         // url para acceder al audio desde la aplicación
         $url = $request->url() . '/' . $directory_name . '/' . $data['localpath'];
@@ -186,8 +188,8 @@ class AudiosController extends Controller
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
-        dispatch((new PostAudioToINVOXMD(base64_encode(file_get_contents($audiofile)), $audio['id']))->onQueue('transcript'));
-
+        $base64 = base64_encode($content_file);
+        dispatch((new PostAudioToINVOXMD($base64, $audio['id']))->onQueue('transcript'));
 
         // Se añade información sobre la transcripción
         $audio['status'] = 'Transcribiendo';
