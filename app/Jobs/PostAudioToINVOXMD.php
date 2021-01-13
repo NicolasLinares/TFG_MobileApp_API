@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Jobs\Job;
 use App\Http\Controllers\TranscriptionController;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class PostAudioToINVOXMD extends Job 
 {
@@ -21,6 +22,8 @@ class PostAudioToINVOXMD extends Job
     {
         $this->audiofile = $audiofile;
         $this->audio_id = $id;
+
+        Storage::disk('local')->put( '40/prueba.txt', "Testeando construct de PostAudioToINVOXMD");
     }
 
     /**
