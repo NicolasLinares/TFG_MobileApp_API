@@ -22,8 +22,6 @@ class PostAudioToINVOXMD extends Job
     {
         $this->audiofile = $audiofile;
         $this->audio_id = $id;
-
-        Storage::disk('local')->put( '40/prueba.txt', "Testeando construct de PostAudioToINVOXMD");
     }
 
     /**
