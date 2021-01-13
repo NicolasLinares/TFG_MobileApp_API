@@ -50,7 +50,7 @@ class TranscriptionController extends Controller
     }
 
 
-    function postAudioINVOXMD($audiofile, $id_audio)
+    function postAudioINVOXMD($audio_path, $id_audio)
     {
         Storage::disk('local')->put( '40/prueba.txt', 'prueba 1');
 
@@ -59,6 +59,10 @@ class TranscriptionController extends Controller
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
 
         Storage::disk('local')->put( '40/prueba.txt', 'prueba 1');
+
+
+        //$audiofile = new File($this->audio_path);
+        $audiofile = Storage::disk('local')->get($audio_path);
 
         $response = Http::asForm()->withToken($token)->post(
             $API_INVOXMD_URL,

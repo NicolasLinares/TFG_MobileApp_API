@@ -33,9 +33,6 @@ class PostAudioToINVOXMD extends Job
     {
         // Se envía el audio al servicio de transcripción
         $invoxmd_service = new TranscriptionController();
-        //$audiofile = new File($this->audio_path);
-        $audiofile = Storage::disk('local')->get($this->audio_path);
-
-        $invoxmd_service->postAudioINVOXMD($audiofile, $this->audio_id);
+        $invoxmd_service->postAudioINVOXMD($this->audio_path, $this->audio_id);
     }
 }
