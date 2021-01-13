@@ -34,7 +34,7 @@ class AudiosController extends Controller
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
                 ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
 
-            $paginated = new Paginator($data, $data->count(), 10);
+            $paginated = new Paginator($data, $data->count(), 10, 2);
             return response()->json($paginated->toArray(), 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
