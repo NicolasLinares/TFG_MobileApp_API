@@ -4,11 +4,12 @@ namespace App\Jobs;
 
 use App\Jobs\Job;
 use App\Http\Controllers\TranscriptionController;
+use Illuminate\Support\Facades\File;
 
 class PostAudioToINVOXMD extends Job
 {
 
-    protected $audiofile;
+    protected $audio_path;
     protected $audio_id;
 
     /**
@@ -16,9 +17,9 @@ class PostAudioToINVOXMD extends Job
      *
      * @return void
      */
-    public function __construct($audiofile, $id)
+    public function __construct($path, $id)
     {
-        $this->audiofile = $audiofile;
+        $this->audio_path = $path;
         $this->audio_id = $id;
     }
 
@@ -31,6 +32,8 @@ class PostAudioToINVOXMD extends Job
     {
         // Se envía el audio al servicio de transcripción
         $invoxmd_service = new TranscriptionController();
-        $invoxmd_service->postAudioINVOXMD($this->audiofile, $this->audio_id);
+
+        $audiofile = new File($this->audio_path);
+        $invoxmd_service->postAudioINVOXMD($audiofile, $this->audio_id);
     }
 }
