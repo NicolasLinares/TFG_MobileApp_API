@@ -67,7 +67,7 @@ class PostAudioToINVOXMD extends Job
             [
                 'Format' => 'WAV',
                 'Data' => $this->audio_base64,
-                'FileName' => 'nuevo_audio'
+                'FileName' =>  $this->audio_id
             ]
         )->json();
 
@@ -85,7 +85,7 @@ class PostAudioToINVOXMD extends Job
             'id_audio' => $this->audio_id
         ]);
 
-        //dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
 
     }
 }
