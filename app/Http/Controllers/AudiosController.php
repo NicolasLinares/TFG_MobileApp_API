@@ -32,10 +32,11 @@ class AudiosController extends Controller
             $data = Audio::where('doctor', $doctor)
                 ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
+                ->paginate(10);
 
-            $paginated = new Paginator($data, $data->count(), 10, 2);
-            return response()->json($paginated->toArray(), 200);
+            //$paginated = new Paginator($data, $data->count(), 10, 2);
+            //return response()->json($paginated->toArray(), 200);
+            return response()->json($data, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
