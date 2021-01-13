@@ -69,7 +69,7 @@ class TranscriptionController extends Controller
             $API_INVOXMD_URL,
             [
                 'Format' => 'WAV',
-                'Data' => base64_encode(file_get_contents($audiofile)),
+                'Data' => base64_encode($audiofile),
                 'FileName' => $id_audio
             ]
         )->json();
