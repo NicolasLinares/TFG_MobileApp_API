@@ -4,11 +4,6 @@ namespace App\Jobs;
 
 use App\Jobs\Job;
 use App\Models\Transcript;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Contracts\Queue\ShouldQueue;
-
 use App\Http\Controllers\TranscriptionController;
 
 class GetTranscriptFromINVOXMD extends Job 

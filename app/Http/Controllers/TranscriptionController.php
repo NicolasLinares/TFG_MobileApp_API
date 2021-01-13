@@ -64,13 +64,8 @@ class TranscriptionController extends Controller
         )->json();
 
 
-        // Se guarda la información en la base de datos
+        // Se registra la nueva transcripción en la base de datos
         $uid_transcript = Str::random(32);
-        // Evitamos que se cree un número random igual, debe ser único
-        if (Transcript::where('uid', $uid_transcript)->exists()) {
-            $uid_transcript = Str::random(32);
-        }
-
         $info = $response['Info'];
 
         $transcription = Transcript::create([
@@ -84,8 +79,7 @@ class TranscriptionController extends Controller
             'id_audio' => $id_audio
         ]);
 
-        
-        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(60));
     }
 
 

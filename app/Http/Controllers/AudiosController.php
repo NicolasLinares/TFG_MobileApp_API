@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\Paginator;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PostAudioToINVOXMD;
 use Exception;
 
 
@@ -130,9 +131,8 @@ class AudiosController extends Controller
 
         $body = $request->all();
 
-        // con true convierte a array
-        $data = json_decode($body['data'], true); // información del audio (name, extension, patient code, localpath...)
-
+        // Metadata del audio (name, extension, patient code, localpath...)
+        $data = json_decode($body['data'], true); // con true convierte a array
 
         // Se comprueba que los campos cumplen el formato
         $validator = Validator::make($data, [
@@ -166,14 +166,8 @@ class AudiosController extends Controller
         // -----------------------------------------------------------------
 
         try {
-            $uid_audio = Str::random(32);
-            // Evitamos que se cree un número random igual, debe ser único
-            if (Audio::where('uid', $uid_audio)->exists()) {
-                $uid_audio = Str::random(32);
-            }
-
             $audio = Audio::create([
-                'uid' => $uid_audio,
+                'uid' => Str::random(32),
                 'name' => $data['name'],
                 'extension' => $data['extension'],
                 'localpath' => $data['localpath'],
@@ -183,30 +177,23 @@ class AudiosController extends Controller
                 'doctor' => $doctor
             ]);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Ha ocurrido un problema al registrar la nota de voz en la base de datos'], 500);
+            return response()->json([
+                'message' => 'Ha ocurrido un problema al registrar la nota de voz en la base de datos',
+                'error' => $e
+            ], 500);
         }
 
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
 
-
-        try {
-
-            // Se envía el audio y se inicializa la transcripción en la base de datos
-            $invoxmd_service = new TranscriptionController();
-            $invoxmd_service->postAudioINVOXMD($audiofile, $audio->id);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos ' . $e], 500);
-        }
+        dispatch((new PostAudioToINVOXMD($audiofile, $audio['id']))->onQueue('audio'));
 
 
+        // Se añade información sobre la transcripción
         $audio['status'] = 'Transcribiendo';
         $audio['transcription'] = '-';
 
         return response()->json($audio, 201);
-
-
     }
 
 
