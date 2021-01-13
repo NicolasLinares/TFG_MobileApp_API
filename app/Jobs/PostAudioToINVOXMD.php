@@ -40,14 +40,29 @@ class PostAudioToINVOXMD extends Job
         //$invoxmd_service = new TranscriptionController();
         //$invoxmd_service->postAudioINVOXMD($this->audio_path, $this->audio_id);
 
-        $transcription = Transcript::create([
-            'id' => '1',
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL');
+        $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
+        $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+
+        $response = Http::asForm()->post(
+            $API_INVOXMD_URL . '/Transcript/v2.6/Token',
+            [
+                'grant_type' => 'password',
+                'username' => $API_INVOXMD_USERNAME,
+                'password' => $API_INVOXMD_PASSWORD
+            ]
+        )->json();
+
+
+        Transcript::create([
+            'id' => '2',
             'uid' => Str::random(32),
             'status' => 'Transcribiendo',
             'progress' => '0',
             'start_date' => null,
             'end_date' => null,
-            'text' => 'prueba1',
+            'text' => $response['access_token'],
             'id_audio' => 750
         ]);
 
