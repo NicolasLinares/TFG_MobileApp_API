@@ -7,7 +7,7 @@ use App\Http\Controllers\TranscriptionController;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
-class PostAudioToINVOXMD extends Job 
+class PostAudioToINVOXMD extends Job
 {
 
     protected $audiofile;
@@ -31,17 +31,10 @@ class PostAudioToINVOXMD extends Job
      */
     public function handle()
     {
-        try {
-            // Se envía el audio al servicio de transcripción
-            $invoxmd_service = new TranscriptionController();
-            $invoxmd_service->postAudioINVOXMD($this->audiofile, $this->audio_id);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un problema al registrar la transcripción en la base de datos',
-                'error' => $e
-            ], 500);
-        }
+        // Se envía el audio al servicio de transcripción
+        $invoxmd_service = new TranscriptionController();
+        $invoxmd_service->postAudioINVOXMD($this->audiofile, $this->audio_id);
+        Storage::disk('local')->put( '40/prueba.txt', "Testeando construct de PostAudioToINVOXMD - 1");
 
     }
 }
