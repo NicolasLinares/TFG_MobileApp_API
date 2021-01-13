@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audio;
-use App\Http\Controllers\TranscriptionController;
+use App\Http\Controllers\INVOXMDController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -246,7 +246,7 @@ class AudiosController extends Controller
 
                 try {
                     // Se borra la transcripción
-                    $invoxmd_service = new TranscriptionController();
+                    $invoxmd_service = new INVOXMDController();
                     $status = $invoxmd_service->deleteTranscriptINVOXMD($audio->id);
 
                     if ($status !== 200) {

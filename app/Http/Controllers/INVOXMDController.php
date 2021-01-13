@@ -32,7 +32,7 @@ class INVOXMDController extends Controller
         $this->API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
 
         $this->URL_TOKEN = $this->API_INVOXMD_SERVER . '/Transcript/v2.6/Token';
-        $this->URL_TOKEN = $this->API_INVOXMD_SERVER . 'Transcript/v2.6/Transcript';
+        $this->URL_TRANSCRIPT = $this->API_INVOXMD_SERVER . 'Transcript/v2.6/Transcript';
     }
 
 
@@ -88,5 +88,17 @@ class INVOXMDController extends Controller
         dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
     }
 
+
+    function deleteTranscriptINVOXMD($id_audio)
+    {
+        $token = $this->getTokenINVOXMD();
+        $transcription = Transcript::where('id_audio', $id_audio)->first();
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcription['id'] . '?username=nicolasenrique01';
+
+        $response = Http::withToken($token)->delete($API_INVOXMD_URL);
+
+        return $response->status();
+    }
 
 }
