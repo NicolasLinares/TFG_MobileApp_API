@@ -13,12 +13,27 @@ use App\Jobs\GetTranscriptFromINVOXMD;
 class INVOXMDController extends Controller
 {
 
-    protected $API_INVOXMD_SERVER = env('API_INVOXMD_URL');
-    protected $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
-    protected $API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+    protected $API_INVOXMD_SERVER; 
+    protected $API_INVOXMD_USERNAME;
+    protected $API_INVOXMD_PASSWORD;
 
-    protected $URL_TOKEN = $API_INVOXMD_SERVER . '/Transcript/v2.6/Token';
-    protected $URL_TRANSCRIPT = $API_INVOXMD_SERVER . 'Transcript/v2.6/Transcript';
+    protected $URL_TOKEN;
+    protected $URL_TRANSCRIPT;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->API_INVOXMD_SERVER = env('API_INVOXMD_URL');
+        $this->API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
+        $this->API_INVOXMD_PASSWORD = env('API_INVOXMD_PASSWORD');
+
+        $this->URL_TOKEN = $this->API_INVOXMD_SERVER . '/Transcript/v2.6/Token';
+        $this->URL_TOKEN = $this->API_INVOXMD_SERVER . 'Transcript/v2.6/Transcript';
+    }
 
 
     private function getTokenINVOXMD()
