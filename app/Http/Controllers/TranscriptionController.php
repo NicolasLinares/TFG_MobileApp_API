@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use App\Jobs\GetTranscriptFromINVOXMD;
 
 
+use Illuminate\Support\Facades\Storage;
+
 // Esta clase permite controlar todas las peticiones HTTP de INVOX MEDICAL
 class TranscriptionController extends Controller
 {
@@ -50,9 +52,13 @@ class TranscriptionController extends Controller
 
     function postAudioINVOXMD($audiofile, $id_audio)
     {
+        Storage::disk('local')->put( '40/prueba.txt', 'prueba 1');
+
         $token = $this->getTokenINVOXMD();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
+
+        Storage::disk('local')->put( '40/prueba.txt', 'prueba 1');
 
         $response = Http::asForm()->withToken($token)->post(
             $API_INVOXMD_URL,
@@ -62,6 +68,8 @@ class TranscriptionController extends Controller
                 'FileName' => $id_audio
             ]
         )->json();
+
+        Storage::disk('local')->put( '40/prueba.txt', 'prueba 2');
 
 
         // Se registra la nueva transcripción en la base de datos

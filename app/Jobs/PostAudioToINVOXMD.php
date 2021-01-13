@@ -4,10 +4,8 @@ namespace App\Jobs;
 
 use App\Jobs\Job;
 use App\Http\Controllers\TranscriptionController;
-use Exception;
-use Illuminate\Support\Facades\Storage;
 
-class PostAudioToINVOXMD extends Job 
+class PostAudioToINVOXMD extends Job
 {
 
     protected $audiofile;
@@ -31,15 +29,8 @@ class PostAudioToINVOXMD extends Job
      */
     public function handle()
     {
-        try {
-            // Se envía el audio al servicio de transcripción
-            $invoxmd_service = new TranscriptionController();
-            $invoxmd_service->postAudioINVOXMD($this->audiofile, $this->audio_id);
-
-        } catch (Exception $e) {
-            Storage::disk('local')->put( '40/prueba.txt', $e);
-
-        }
-
+        // Se envía el audio al servicio de transcripción
+        $invoxmd_service = new TranscriptionController();
+        $invoxmd_service->postAudioINVOXMD($this->audiofile, $this->audio_id);
     }
 }
