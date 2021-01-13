@@ -14,6 +14,8 @@ use App\Jobs\GetTranscriptFromINVOXMD;
 
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+
 
 // Esta clase permite controlar todas las peticiones HTTP de INVOX MEDICAL
 class TranscriptionController extends Controller
@@ -61,8 +63,7 @@ class TranscriptionController extends Controller
         Storage::disk('local')->put( '40/prueba.txt', 'prueba 1');
 
 
-        //$audiofile = new File($this->audio_path);
-        $audiofile = Storage::disk('local')->get($audio_path);
+        $audiofile = new File('/var/www/html/TFG_MobileApp_API/storage/app/40/masde2mb.wav');
 
         $response = Http::asForm()->withToken($token)->post(
             $API_INVOXMD_URL,
