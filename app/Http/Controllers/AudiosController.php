@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\PostAudioToINVOXMD;
@@ -35,9 +34,6 @@ class AudiosController extends Controller
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
 
-
-            //$paginated = new Paginator($data, $data->count(), 10, 2);
-            //return response()->json($paginated->toArray(), 200);
             return response()->json($data, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
@@ -55,12 +51,12 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor],
                 ['tag', '=', $tag]
             ])
-                ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
+                ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
+                ->orderBy('audio.id', 'desc')
+                ->simplePaginate(10);
 
-            $paginated = new Paginator($data, $data->count(), 10);
-            return response()->json($paginated->toArray(), 200);
+            return response()->json($data, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -77,12 +73,10 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor],
                 ['name', 'LIKE', '%' . $name . '%']
             ])
-                ->orderBy('id', 'desc')
                 ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
-                ->get(['audio.*', 'transcript.text as transcription', 'transcript.status']);
-
-            $paginated = new Paginator($data, $data->count(), 10);
-            return response()->json($paginated->toArray(), 200);
+                ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
+                ->orderBy('audio.id', 'desc')
+                ->simplePaginate(10);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
