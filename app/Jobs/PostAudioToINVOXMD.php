@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 class PostAudioToINVOXMD extends Job
 {
 
-    protected $audio_path;
+    protected $audio_base64;
     protected $audio_id;
 
     /**
@@ -23,9 +23,9 @@ class PostAudioToINVOXMD extends Job
      *
      * @return void
      */
-    public function __construct($path, $id)
+    public function __construct($base64, $id)
     {
-        $this->audio_path = $path;
+        $this->audio_base64 = $base64;
         $this->audio_id = $id;
     }
 
@@ -59,13 +59,12 @@ class PostAudioToINVOXMD extends Job
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
 
 
-        $audiofile = File::get('/var/www/html/TFG_MobileApp_API/storage/app/40/masde2mb.wav');
 
         $response = Http::asForm()->withToken($token)->post(
             $API_INVOXMD_URL,
             [
                 'Format' => 'WAV',
-                'Data' => base64_encode(file_get_contents($audiofile)),
+                'Data' => $this->audio_base64,
                 'FileName' => 'nuevo_audio'
             ]
         )->json();
