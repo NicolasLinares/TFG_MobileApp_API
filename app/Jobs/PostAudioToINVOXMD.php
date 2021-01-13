@@ -54,6 +54,23 @@ class PostAudioToINVOXMD extends Job
             ]
         )->json();
 
+        $token =  $response['access_token'];
+
+        $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript?username=nicolasenrique01';
+
+
+        //$audiofile = File::get('/var/www/html/TFG_MobileApp_API/storage/app/40/masde2mb.wav');
+
+        $response = Http::asForm()->withToken($token)->post(
+            $API_INVOXMD_URL,
+            [
+                'Format' => 'WAV',
+                'Data' => base64_encode('Nada'),
+                'FileName' => 'nuevo_audio'
+            ]
+        )->json();
+
+
 
         Transcript::create([
             'id' => '2',
@@ -62,7 +79,7 @@ class PostAudioToINVOXMD extends Job
             'progress' => '0',
             'start_date' => null,
             'end_date' => null,
-            'text' => $response['access_token'],
+            'text' => $response['Text'],
             'id_audio' => 750
         ]);
 
