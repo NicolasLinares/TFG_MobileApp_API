@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
-use App\Http\Controllers\TranscriptionController;
+use App\Http\Controllers\INVOXMDController;
 
 
 class PostAudioToINVOXMD extends Job
@@ -31,7 +31,7 @@ class PostAudioToINVOXMD extends Job
     public function handle()
     {
         // Se envía el audio al servicio de transcripción
-        $invoxmd_service = new TranscriptionController();
+        $invoxmd_service = new INVOXMDController();
         $invoxmd_service->postAudioINVOXMD($this->audio_base64, $this->audio_id);
     }
 }

@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 use App\Models\Transcript;
 use App\Models\Audio;
 
-use App\Jobs\GetTranscriptFromINVOXMD;
-
+use App\Http\Controllers\INVOXMDController;
 
 // Esta clase permite controlar todas las peticiones HTTP de INVOX MEDICAL
 class TranscriptionController extends Controller
 {
+    /*
 
     protected $API_INVOXMD_SERVER = env('API_INVOXMD_URL');
     protected $API_INVOXMD_USERNAME = env('API_INVOXMD_USERNAME');
@@ -76,44 +75,39 @@ class TranscriptionController extends Controller
 
         dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
     }
-
+*/
 
     function getTranscript($uid, Request $request)
     {
         if ($request->isJson()) {
+
             $doctor = Auth::id();
             // Obtiene primero el id del audio asociado
-            $id_audio = Audio::select('id')
-                ->where([
-                    ['doctor', '=', $doctor],
-                    ['uid', '=', $uid]
-                ])
-                ->first();
-
+            $id_audio = Audio::select('id')->where([['doctor', '=', $doctor], ['uid', '=', $uid]])->first();
             // Obtiene la transcripción asociada al id del audio
-            $transcript = Transcript::where('id_audio', $id_audio['id'])->first();
+            $transcription = Transcript::where('id_audio', $id_audio['id'])->first();
 
             // Si no está completada se procede a recuperarla del servicio de transcripción
-            if ($transcript['status'] !== 'Completada') {
+            if ($transcription['status'] !== 'Completada') {
 
                 // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
                 // -----------------------------------------------------------------
+                // Se recupera la transcripción de InvoxMD
+                $invoxmd_service = new INVOXMDController();
+                $response = $invoxmd_service->getTranscriptINVOXMD($transcription['id']);
 
-                // Se obtiene la transcripción por primera vez y se registra en la base de datos
-                $response = $this->getTranscriptINVOXMD($transcript['id']);
-
+                // BASE DE DATOS
+                // -----------------------------------------------------------------
                 $info = $response['Info'];
-
-                $transcript->status = $info['Status'];
-                $transcript->progress = strval($info['Progress']);
-                $transcript->end_date = $info['EndDate'];
-                $transcript->text = $response['Text'];
-                $transcript->save();
-
-                return response()->json($transcript, 200);
+                $transcription['status'] = $info['Status'];
+                $transcription['progress'] = strval($info['Progress']);
+                $transcription['start_date'] = $info['StartDate'];
+                $transcription['end_date'] = $info['EndDate'];
+                $transcription['text'] = $response['Text'];
+                $transcription->save();
             }
 
-            return response()->json($transcript, 200);
+            return response()->json($transcription, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
