@@ -77,6 +77,9 @@ class AudiosController extends Controller
                 ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
+            
+            return response()->json($data, 200);
+
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
