@@ -51,12 +51,14 @@ $router->group(['prefix' => 'v1'], function ($router) {
     $router->post('/login',  ['uses' => 'AuthController@login']);
     // SIGNUP
     $router->post('/signin',  ['uses' => 'AuthController@signin']);
-    // REFRESH
-    $router->put('/refresh',  ['uses' => 'AuthController@refresh']);
 
     // Todas las peticiones que se producen dentro de la app pasan a través
     // de un middleware de autenticación JWT
     $router->group(['middleware' => 'auth:api'], function ($router) {
+
+        // REFRESH
+        $router->put('/refresh',  ['uses' => 'AuthController@refresh']);
+
 
         // LOGOUT
         $router->delete('/logout', ['uses' => 'AuthController@logout']);
@@ -85,6 +87,5 @@ $router->group(['prefix' => 'v1'], function ($router) {
 
         // TRANSCRIPT
         $router->get('transcript/{uid}', ['uses' => 'TranscriptionController@getTranscript']);
-
     });
 });
