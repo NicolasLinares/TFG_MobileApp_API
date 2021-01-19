@@ -155,13 +155,6 @@ class AudiosController extends Controller
 
         $audiofile = $body['file']; // archivo de audio
 
-
-        return response()->json($audiofile, 201);
-
-
-
-
-
         $directory_name = $doctor; // user id
 
         $content_file = file_get_contents($audiofile);
