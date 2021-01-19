@@ -188,7 +188,7 @@ class AudiosController extends Controller
 
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
-        $base64 = $audiofile; //base64_encode($content_file);
+        $base64 = base64_encode($content_file);
         dispatch((new PostAudioToINVOXMD($base64, $audio['id']))->onQueue('audio'));
 
 
