@@ -132,7 +132,7 @@ class AudiosController extends Controller
         // -----------------------------------------------------------------
         $body = $request->all();
 
-        // Metadata del audio (name, extension, patient code, localpath...)
+        // Metadata del audio (name, extension, patient code (tag), uname...)
         $data = json_decode($body['data'], true); // con true convierte a array
 
         // Se comprueba que los campos cumplen el formato
@@ -140,7 +140,7 @@ class AudiosController extends Controller
             'name' => 'required',
             'extension' => 'required',
             'tag' => 'required',
-            'localpath' => 'required',
+            'uname' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -159,10 +159,10 @@ class AudiosController extends Controller
 
         $content_file = file_get_contents($audiofile);
 
-        Storage::disk('local')->put($directory_name . '/' . $data['localpath'], $content_file);
+        Storage::disk('local')->put($directory_name . '/' . $data['uname'], $content_file);
 
         // url para acceder al audio desde la aplicación
-        $url = $request->url() . '/' . $directory_name . '/' . $data['localpath'];
+        $url = $request->url() . '/' . $directory_name . '/' . $data['uname'];
 
 
 
@@ -174,7 +174,7 @@ class AudiosController extends Controller
                 'uid' => Str::random(32),
                 'name' => $data['name'],
                 'extension' => $data['extension'],
-                'localpath' => $data['localpath'],
+                'uname' => $data['uname'],
                 'url' => $url,
                 'tag' => $data['tag'],
                 'description' => $data['description'] != "" ? $data['description'] : null,
@@ -218,7 +218,7 @@ class AudiosController extends Controller
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
             if ($audio) {
-                return Storage::download($doctor . '/' . $audio['localpath']);
+                return Storage::download($doctor . '/' . $audio['uname']);
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
             }
@@ -269,7 +269,7 @@ class AudiosController extends Controller
                 // Se borra el audio en el filesystem
                 // El directorio es el id del usuario, por tanto si el audio se encuentra 
                 // en su carpeta entonces el acceso está permitido
-                Storage::disk('local')->delete($doctor . '/' . $audio['localpath']);
+                Storage::disk('local')->delete($doctor . '/' . $audio['uname']);
 
 
                 // Número de audios que tienen el mismo código de paciente (tag)
