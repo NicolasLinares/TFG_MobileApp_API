@@ -82,7 +82,7 @@ class INVOXMDController extends Controller
             'start_date' => strtotime($info['StartDate']),
             'end_date' => null,
             'text' => $response['Text'],
-            'id_audio' => $id_audio
+            'audio' => $id_audio
         ]);
 
         dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
@@ -92,7 +92,7 @@ class INVOXMDController extends Controller
     function deleteTranscriptINVOXMD($id_audio)
     {
         $token = $this->getTokenINVOXMD();
-        $transcription = Transcript::where('id_audio', $id_audio)->first();
+        $transcription = Transcript::where('audio', $id_audio)->first();
 
         $API_INVOXMD_URL = env('API_INVOXMD_URL') . 'Transcript/v2.6/Transcript/' . $transcription['id'] . '?username=nicolasenrique01';
 

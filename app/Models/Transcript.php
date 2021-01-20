@@ -23,7 +23,7 @@ class Transcript extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'uid', 'status', 'progress', 'startDate', 'endDate', 'text', 'id_audio'
+        'id', 'uid', 'status', 'progress', 'startDate', 'endDate', 'text', 'audio'
     ];
 
     /**

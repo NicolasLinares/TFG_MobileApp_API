@@ -29,7 +29,7 @@ class AudiosController extends Controller
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where('doctor', $doctor)
-                ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->join('transcript', 'audio.id', '=', 'transcript.audio')
                 ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
@@ -51,7 +51,7 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor],
                 ['tag', '=', $tag]
             ])
-                ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->join('transcript', 'audio.id', '=', 'transcript.audio')
                 ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
@@ -73,7 +73,7 @@ class AudiosController extends Controller
                 ['doctor', '=', $doctor],
                 ['name', 'LIKE', '%' . $name . '%']
             ])
-                ->join('transcript', 'audio.id', '=', 'transcript.id_audio')
+                ->join('transcript', 'audio.id', '=', 'transcript.audio')
                 ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
