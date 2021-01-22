@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\JWTAuth;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -21,7 +18,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware ('auth:api', ['except' => ['login', 'signin']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signin']]);
     }
 
     /**
@@ -39,12 +36,12 @@ class AuthController extends Controller
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
-                'name'=> 'required',
-                'surname'=> 'required',
+                'name' => 'required',
+                'surname' => 'required',
                 'email' => 'required|email|max:255',
                 'password' => 'required',
-                'specialty'=> 'required',
-                'country'=> 'required',
+                'specialty' => 'required',
+                'country' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -53,33 +50,33 @@ class AuthController extends Controller
 
             if (User::where('email', $data['email'])->doesntExist()) {
                 // Si el usuario existe
-                try{
+                try {
 
                     $uid = Str::random(32);
                     // evitamos que se cree un número random igual, debe ser un único
-                    while(User::where('uid', $uid)->exists()) {
+                    while (User::where('uid', $uid)->exists()) {
                         $uid = Str::random(32);
                     }
 
                     $user = User::create([
-                        'uid'=> $uid,
-                        'name'=> $data['name'],
-                        'surname'=> $data['surname'],
-                        'email'=> $data['email'],
-                        'password'=> Hash::make($data['password']),
-                        'specialty'=> $data['specialty'],
-                        'country'=> $data['country'],
+                        'uid' => $uid,
+                        'name' => $data['name'],
+                        'surname' => $data['surname'],
+                        'email' => $data['email'],
+                        'password' => Hash::make($data['password']),
+                        'specialty' => $data['specialty'],
+                        'country' => $data['country'],
                     ]);
 
-                    return response()->json(['message' =>'Usuario creado correctamente'], 201);
+                    return response()->json(['message' => 'Usuario creado correctamente'], 201);
                 } catch (Exception $e) {
-                    return response()->json(['error' => 'Ha ocurrido un problema en el registro ' ], 500);
+                    return response()->json(['error' => 'Ha ocurrido un problema en el registro '], 500);
                 }
             } else {
-                return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email' ], 400);
-            }        
+                return response()->json(['error' => 'El usuario ya se encuentra registrado con ese email'], 400);
+            }
         } else {
-            return response()->json(['error' => 'El formato no es válido' ], 400);
+            return response()->json(['error' => 'El formato no es válido'], 400);
         }
     }
 
@@ -91,12 +88,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if ($request->isJson()) {
-                
+
             $credentials = $request->only('email', 'password');
-            
+
 
             // Se comprueba que los campos cumplen el formato
-            $validator = Validator::make ($credentials, [
+            $validator = Validator::make($credentials, [
                 'email' => 'required|email|max:255',
                 'password' => 'required'
             ]);
@@ -104,17 +101,16 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return response()->json(['error' => 'Los datos introducidos no son correctos'], 422);
             }
-            
 
-            if (!$token = auth()->attempt ($credentials)) {
+
+            if (!$token = auth()->attempt($credentials)) {
                 return response()->json(['error' => 'Email o contraseña incorrectos'], 400);
             }
 
             // Éxito - Login correcto
             return $this->respondWithToken($token);
-
         } else {
-            return response()->json(['error' => 'El formato no es válido' ], 400);
+            return response()->json(['error' => 'El formato no es válido'], 400);
         }
     }
 
@@ -169,7 +165,4 @@ class AuthController extends Controller
             'user' => auth()->user(),
         ], 200);
     }
-
-
-
 }
