@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Jobs\Job;
 use App\Http\Controllers\INVOXMDController;
 
+use Throwable;
 
 class PostAudioToINVOXMD extends Job
 {
@@ -33,5 +34,17 @@ class PostAudioToINVOXMD extends Job
         // Se envía el audio al servicio de transcripción
         $invoxmd_service = new INVOXMDController();
         $invoxmd_service->postAudioINVOXMD($this->audio_base64, $this->audio_id);
+    }
+
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        // Send user notification of failure, etc...
     }
 }
