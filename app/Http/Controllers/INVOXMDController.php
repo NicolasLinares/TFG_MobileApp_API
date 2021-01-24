@@ -58,7 +58,7 @@ class INVOXMDController extends Controller
     }
 
 
-    function postAudioINVOXMD($audio_base64, $id_audio)
+    function postAudioINVOXMD($audio_base64, $audio_name, $audio_id)
     {
         $token = $this->getTokenINVOXMD();
         $URL = $this->URL_TRANSCRIPT . '?username=nicolasenrique01';
@@ -68,7 +68,7 @@ class INVOXMDController extends Controller
             [
                 'Format' => 'WAV',
                 'Data' => $audio_base64,
-                'FileName' => $id_audio
+                'FileName' => $audio_name
             ]
         )->json();
 
@@ -82,7 +82,7 @@ class INVOXMDController extends Controller
             'start_date' => strtotime($info['StartDate']),
             'end_date' => null,
             'text' => $response['Text'],
-            'audio' => $id_audio
+            'audio' => $audio_id
         ]);
 
         dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));

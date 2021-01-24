@@ -52,14 +52,8 @@ class AuthController extends Controller
                 // Si el usuario existe
                 try {
 
-                    $uid = Str::random(32);
-                    // evitamos que se cree un número random igual, debe ser un único
-                    while (User::where('uid', $uid)->exists()) {
-                        $uid = Str::random(32);
-                    }
-
-                    $user = User::create([
-                        'uid' => $uid,
+                    User::create([
+                        'uid' => Str::random(32),
                         'name' => $data['name'],
                         'surname' => $data['surname'],
                         'email' => $data['email'],

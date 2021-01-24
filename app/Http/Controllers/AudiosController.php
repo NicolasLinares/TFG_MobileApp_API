@@ -25,16 +25,16 @@ class AudiosController extends Controller
     {
 
         if ($request->isJson()) {
-            $doctor = Auth::id();
+            $id_user = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
-            $data = Audio::where('doctor', $doctor)
+            $history = Audio::where('doctor', $id_user)
                 ->join('transcript', 'audio.id', '=', 'transcript.audio')
                 ->select(['audio.*', 'transcript.text as transcription', 'transcript.status'])
                 ->orderBy('audio.id', 'desc')
                 ->simplePaginate(10);
 
-            return response()->json($data, 200);
+            return response()->json($history, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
         }
@@ -44,11 +44,11 @@ class AudiosController extends Controller
     {
         if ($request->isJson()) {
 
-            $doctor = Auth::id();
+            $id_user = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
-                ['doctor', '=', $doctor],
+                ['doctor', '=', $id_user],
                 ['tag', '=', $tag]
             ])
                 ->join('transcript', 'audio.id', '=', 'transcript.audio')
@@ -66,11 +66,11 @@ class AudiosController extends Controller
     {
         if ($request->isJson()) {
 
-            $doctor = Auth::id();
+            $id_user = Auth::id();
 
             // Paginación ordenada de forma descendente (primero los audios más recientes)
             $data = Audio::where([
-                ['doctor', '=', $doctor],
+                ['doctor', '=', $id_user],
                 ['name', 'LIKE', '%' . $name . '%']
             ])
                 ->join('transcript', 'audio.id', '=', 'transcript.audio')
@@ -90,12 +90,12 @@ class AudiosController extends Controller
     {
 
         if ($request->isJson()) {
-            $doctor = Auth::id();
+            $id_user = Auth::id();
             // Se borran todos los audios asociados al médico
-            Audio::where('doctor', $doctor)->delete();
+            Audio::where('doctor', $id_user)->delete();
 
             // Se borra todo el contenido del directorio del usuario asociado
-            Storage::disk('local')->deleteDirectory($doctor);
+            Storage::disk('local')->deleteDirectory($id_user);
 
             return response()->json(['message' => 'Todos los audios se han borrado correctamente.'], 200);
         } else {
@@ -107,10 +107,10 @@ class AudiosController extends Controller
     {
 
         if ($request->isJson()) {
-            $doctor = Auth::id();
+            $id_user = Auth::id();
             $data = Audio::select('tag')
                 ->distinct('tag')
-                ->where('doctor', $doctor)
+                ->where('doctor', $id_user)
                 ->orderBy('tag', 'desc')
                 ->get();
             return response()->json($data, 200);
@@ -151,11 +151,11 @@ class AudiosController extends Controller
         // FILESYSTEM
         // -----------------------------------------------------------------
 
-        $doctor = Auth::id();
+        $id_user = Auth::id();
 
         $audiofile = $body['file']; // archivo de audio
 
-        $directory_name = $doctor; // user id
+        $directory_name = $id_user; // user id
 
         $content_file = file_get_contents($audiofile);
 
@@ -178,7 +178,7 @@ class AudiosController extends Controller
                 'url' => $url,
                 'tag' => $data['tag'],
                 'description' => $data['description'] != "" ? $data['description'] : null,
-                'doctor' => $doctor
+                'doctor' => $id_user
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -190,8 +190,7 @@ class AudiosController extends Controller
         // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
         // -----------------------------------------------------------------
         $base64 = base64_encode($content_file);
-        dispatch((new PostAudioToINVOXMD($base64, $audio['id']))->onQueue('audio'));
-
+        dispatch((new PostAudioToINVOXMD($base64, $audio['name'], $audio['id']))->onQueue('audio'));
 
 
         // RESPUESTA
@@ -208,17 +207,17 @@ class AudiosController extends Controller
     function downloadAudioFile($uid, Request $request)
     {
         if ($request->isJson()) {
-            $doctor = Auth::id();
+            $id_user = Auth::id();
 
             $audio = Audio::where([
                 ['uid', '=', $uid],
-                ['doctor', '=', $doctor]
+                ['doctor', '=', $id_user]
             ])->first();
 
             // El directorio es el id del usuario, por tanto si el audio se encuentra 
             // en su carpeta entonces el acceso está permitido
             if ($audio) {
-                return Storage::download($doctor . '/' . $audio['uname']);
+                return Storage::download($id_user . '/' . $audio['uname']);
             } else {
                 return response()->json(['error' => 'Audio no encontrado'], 404);
             }
@@ -232,11 +231,11 @@ class AudiosController extends Controller
 
         if ($request->isJson()) {
             // Se comprueba que el usuario que borra sea el dueño del audio
-            $doctor = Auth::id();
+            $id_user = Auth::id();
 
             $audio = Audio::where([
                 ['uid', '=', $uid],
-                ['doctor', '=', $doctor]
+                ['doctor', '=', $id_user]
             ])->first();
 
             if ($audio) {
@@ -269,13 +268,13 @@ class AudiosController extends Controller
                 // Se borra el audio en el filesystem
                 // El directorio es el id del usuario, por tanto si el audio se encuentra 
                 // en su carpeta entonces el acceso está permitido
-                Storage::disk('local')->delete($doctor . '/' . $audio['uname']);
+                Storage::disk('local')->delete($id_user . '/' . $audio['uname']);
 
 
                 // Número de audios que tienen el mismo código de paciente (tag)
                 $n_audios = Audio::where([
                     ['tag', '=', $audio['tag']],
-                    ['doctor', '=', $doctor]
+                    ['doctor', '=', $id_user]
                 ])->count();
 
                 return response()->json(
@@ -300,10 +299,10 @@ class AudiosController extends Controller
 
             $data = $request->only('description');
 
-            $doctor = Auth::id();
+            $id_user = Auth::id();
             $audio = Audio::where([
                 ['uid', '=', $uid],
-                ['doctor', '=', $doctor]
+                ['doctor', '=', $id_user]
             ])->first();
 
             if ($audio) {
@@ -326,10 +325,10 @@ class AudiosController extends Controller
 
             $data = $request->only('name');
 
-            $doctor = Auth::id();
+            $id_user = Auth::id();
             $audio = Audio::where([
                 ['uid', '=', $uid],
-                ['doctor', '=', $doctor]
+                ['doctor', '=', $id_user]
             ])->first();
 
             if ($audio) {

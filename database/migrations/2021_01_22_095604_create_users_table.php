@@ -14,8 +14,9 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('user', function (Blueprint $table) {
+            // Datos comunes a todas las tablas
             $table->integer('id', true, false)->index('id')->comment('Clave primaria');
-            $table->char('uid', 32)->unique('uid')->comment('Clave única para mejorar la seguridad al hacer consultas');
+            $table->char('uid', 32)->unique('uid')->comment('Clave única accesible para el usuario');
             $table->timestamps(); // created_at & updated_at
 
             // Datos específicos del objeto que representa la tabla
