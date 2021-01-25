@@ -46,25 +46,22 @@ $router->get('rename/{directory}/{filename}', function ($directory, $filename) {
 
 
 
+// VERSION 1
 $router->group(['prefix' => 'v1'], function ($router) {
-    // LOGIN
+    // LOGIN & SIGNIN
     $router->post('/login',  ['uses' => 'AuthController@login']);
-    // SIGNUP
     $router->post('/signin',  ['uses' => 'AuthController@signin']);
 
-    // Todas las peticiones que se producen dentro de la app pasan a través
-    // de un middleware de autenticación JWT
+    // MIDDLEWARE JWT - Filtro que autentica al usuario
     $router->group(['middleware' => 'auth:api'], function ($router) {
 
         // REFRESH TOKEN
         $router->put('/refresh',  ['uses' => 'AuthController@refresh']);
-
         // LOGOUT
         $router->delete('/logout', ['uses' => 'AuthController@logout']);
 
         // USER OPERATIONS
         $router->get('users', ['uses' => 'UsersController@getAll']);
-
         $router->put('user/password', ['uses' => 'UsersController@updatePassword']);
         $router->put('user/country', ['uses' => 'UsersController@updateCountry']);
         $router->put('user/specialty', ['uses' => 'UsersController@updatespecialty']);
@@ -75,7 +72,6 @@ $router->group(['prefix' => 'v1'], function ($router) {
         $router->get('audios/filter/{tag}', ['uses' => 'AudiosController@filterByTag']);
         $router->get('audios/search/{name}', ['uses' => 'AudiosController@searchByName']);
         $router->get('tags', ['uses' => 'AudiosController@getTags']);
-
         $router->post('audio', ['uses' => 'AudiosController@add']);
         $router->get('audio/{uid}', ['uses' => 'AudiosController@downloadAudioFile']);
         $router->delete('audio/{uid}', ['uses' => 'AudiosController@delete']);
