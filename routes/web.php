@@ -14,38 +14,6 @@
 |
 */
 
-use Illuminate\Support\Facades\Storage;
-
-$router->get('storage/{directory}/{filename}', function ($directory, $filename) {
-    return Storage::download($directory . '/' . $filename);             // Download file
-});
-
-// https://pln.inf.um.es/TFG_MobileApp_API/public/storage/24/file.m4a
-$router->get('storage/{directory}/{filename}', function ($directory, $filename) {
-    Storage::disk('local')->delete($directory . '/' . $filename);           // Delete specific file
-});
-
-
-// https://pln.inf.um.es/TFG_MobileApp_API/public/delete/24
-$router->get('delete/{dir}', function ($dir) {
-    Storage::disk('local')->deleteDirectory($dir);              // Delete all in dir
-});
-
-
-// https://pln.inf.um.es/TFG_MobileApp_API/public/exists/24/file.m4a
-$router->get('exists/{directory}/{filename}', function ($directory, $filename) {
-    $value = Storage::disk('local')->exists($directory . '/' . $filename);      // Exists
-    return response()->json($value, 200);
-});
-
-
-// https://pln.inf.um.es/TFG_MobileApp_API/public/rename/24/file.m4a
-$router->get('rename/{directory}/{filename}', function ($directory, $filename) {
-    Storage::disk('local')->move($directory . '/' . $filename, $directory . '/renombrado.m4a');   // renombrar
-});
-
-
-
 // VERSION 1
 $router->group(['prefix' => 'v1'], function ($router) {
     // LOGIN & SIGNIN
@@ -82,3 +50,51 @@ $router->group(['prefix' => 'v1'], function ($router) {
         $router->get('transcript/{uid}', ['uses' => 'TranscriptionController@getTranscript']);
     });
 });
+
+
+
+
+
+
+
+
+/*
+Rutas usadas para administrar los archivos de audio
+
+
+use Illuminate\Support\Facades\Storage;
+
+// DOWNLOAD FILE
+// https://pln.inf.um.es/TFG_MobileApp_API/public/dir/file.wav
+$router->get('{directory}/{filename}', function ($directory, $filename) {
+    return Storage::download($directory . '/' . $filename);
+});
+
+// RENAME FILE
+// https://pln.inf.um.es/TFG_MobileApp_API/public/dir/file.wav
+$router->put('rename/{directory}/{filename}', function ($directory, $filename) {
+    // faltaría obtener del json el nuevo nombre
+    $new_name = '/renombrado.m4a';
+    Storage::disk('local')->move($directory . '/' . $filename, $directory . $new_name);
+});
+
+// DELETE FILE
+// https://pln.inf.um.es/TFG_MobileApp_API/public/dir/file.wav
+$router->delete('{directory}/{filename}', function ($directory, $filename) {
+    Storage::disk('local')->delete($directory . '/' . $filename);
+});
+
+// DELETE ALL IN DIRECTORY
+// https://pln.inf.um.es/TFG_MobileApp_API/public/dir
+$router->delete('{directory}', function ($directory) {
+    Storage::disk('local')->deleteDirectory($directory);
+});
+
+// CHECK IF EXISTS
+// https://pln.inf.um.es/TFG_MobileApp_API/public/exists/dir
+$router->get('exists/{directory}/{filename}', function ($directory, $filename) {
+    $value = Storage::disk('local')->exists($directory . '/' . $filename);
+    return response()->json($value, 200);
+});
+
+*/
