@@ -32,7 +32,7 @@ class GetTranscriptFromINVOXMD extends Job
         if ($this->transcription['status'] !== 'Completada') {
             // Se obtiene la transcripción
             $invoxmd_service = new INVOXMDController();
-            $invoxmd_service->getTranscriptINVOXMD($this->transcription['id']);
+            $invoxmd_service->getTranscriptINVOXMD($this->transcription);
         }
     }
 }
