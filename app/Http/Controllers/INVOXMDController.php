@@ -67,7 +67,7 @@ class INVOXMDController extends Controller
             $transcription['text'] = $response['Text'];
             $transcription->save();
         } else {
-            dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(5));
+            dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(10));
         }
     }
 
@@ -99,7 +99,7 @@ class INVOXMDController extends Controller
             'audio' => $audio_id
         ]);
 
-        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(5));
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(10));
     }
 
 
