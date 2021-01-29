@@ -30,22 +30,9 @@ class GetTranscriptFromINVOXMD extends Job
     {
 
         if ($this->transcription['status'] !== 'Completada') {
-
-            // INVOXMD - SERVICIO DE TRANSCRIPCIÓN
-            // -----------------------------------------------------------------
-            // Se obtiene la transcripción por primera vez y se registra en la base de datos
+            // Se obtiene la transcripción
             $invoxmd_service = new INVOXMDController();
-            $response = $invoxmd_service->getTranscriptINVOXMD($this->transcription['id']);
-
-            // BASE DE DATOS
-            // -----------------------------------------------------------------
-            $info = $response['Info'];
-            $this->transcription['status'] = $info['Status'];
-            $this->transcription['progress'] = strval($info['Progress']);
-            $this->transcription['start_date'] = $info['StartDate'];
-            $this->transcription['end_date'] = $info['EndDate'];
-            $this->transcription['text'] = $response['Text'];
-            $this->transcription->save();
+            $invoxmd_service->getTranscriptINVOXMD($this->transcription['id']);
         }
     }
 }

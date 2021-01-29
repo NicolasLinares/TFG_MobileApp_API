@@ -50,11 +50,25 @@ class INVOXMDController extends Controller
         return $response['access_token'];
     }
 
-    function getTranscriptINVOXMD($id)
+    function getTranscriptINVOXMD($transcription)
     {
         $token = $this->getTokenINVOXMD();
-        $URL = $this->URL_TRANSCRIPT . '/' . $id . '?username=nicolasenrique01';
-        return Http::withToken($token)->get($URL)->json();
+        $URL = $this->URL_TRANSCRIPT . '/' . $transcription['id'] . '?username=nicolasenrique01';
+        $response = Http::withToken($token)->get($URL)->json();
+
+        $info = $response['Info'];
+        if ($info['Status'] === 'Completada') {
+
+            // Se registran los cambios en la base de datos
+            $transcription['status'] = $info['Status'];
+            $transcription['progress'] = strval($info['Progress']);
+            $transcription['start_date'] = $info['StartDate'];
+            $transcription['end_date'] = $info['EndDate'];
+            $transcription['text'] = $response['Text'];
+            $transcription->save();
+        } else {
+            dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(5));
+        }
     }
 
 
@@ -85,7 +99,7 @@ class INVOXMDController extends Controller
             'audio' => $audio_id
         ]);
 
-        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(30));
+        dispatch((new GetTranscriptFromINVOXMD($transcription))->onQueue('transcript')->delay(5));
     }
 
 
