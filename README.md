@@ -1,24 +1,45 @@
-# Lumen PHP Framework
+# Trabajo de fin de grado
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+API REST creada con Laravel Lumen en PHP.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
 
-## Official Documentation
+## Requisitos previos
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+1. Instalar PHP:
 
-## Contributing
+```
+sudo apt-get install php
+```
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Tener instalado Composer para gestionar las dependencias. Si no descarga Composer desde el website oficial utilizando el siguiente comando:
 
-## Security Vulnerabilities
+```
+php -r “copy(‘https://getcomposer.org/installer', ‘composer-setup.php’);”
+```
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Instala composer:
 
-## License
+```
+php composer-setup.php
+```
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. Instalar Laravel Lumen:
+
+```
+composer global require laravel/installer
+```
+
+
+## Guía de instalación
+
+1. Descargar el proyecto.
+
+2. Entrar en la carpeta del proyecto.
+
+3. Ejecutar el siguiente comando para instalar las dependencias:
+
+```
+composer install
+```
+
+4. Crear el archivo .env que almacena las variables de entorno necesarias.
