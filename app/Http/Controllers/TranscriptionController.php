@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
-use App\Models\Transcript;
 use App\Models\Audio;
+use App\Models\Transcript;
 
 use App\Http\Controllers\INVOXMDController;
 
@@ -24,6 +23,7 @@ class TranscriptionController extends Controller
             // Obtiene la transcripción asociada al id del audio
             $transcription = Transcript::where('audio', $id_audio['id'])->first();
 
+            /*
             // Si no está completada se procede a recuperarla del servicio de transcripción
             if ($transcription['status'] !== 'Completada') {
 
@@ -43,7 +43,8 @@ class TranscriptionController extends Controller
                 $transcription['text'] = $response['Text'];
                 $transcription->save();
             }
-
+            */
+            
             return response()->json($transcription, 200);
         } else {
             return response()->json(['error' => 'Usuario no autorizado.'], 401);
