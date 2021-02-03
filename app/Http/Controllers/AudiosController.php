@@ -137,10 +137,10 @@ class AudiosController extends Controller
 
         // Se comprueba que los campos cumplen el formato
         $validator = Validator::make($data, [
-            'name' => 'required',
-            'extension' => 'required',
-            'tag' => 'required',
-            'uname' => 'required',
+            'name' => 'required|max:32',
+            'extension' => 'required|max:3',
+            'tag' => 'required|max:32',
+            'uname' => 'required|max:36',
         ]);
 
         if ($validator->fails()) {

@@ -36,12 +36,12 @@ class AuthController extends Controller
 
             // Se comprueba que los campos cumplen el formato
             $validator = Validator::make($data, [
-                'name' => 'required',
-                'surname' => 'required',
+                'name' => 'required|max:60',
+                'surname' => 'required|max:60',
                 'email' => 'required|email|max:255',
-                'password' => 'required',
-                'specialty' => 'required',
-                'country' => 'required',
+                'password' => 'required|max:60',
+                'specialty' => 'required|max:60',
+                'country' => 'required|max:60',
             ]);
 
             if ($validator->fails()) {
